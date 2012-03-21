@@ -1,25 +1,4 @@
 Smalltalk current createPackage: 'GitHub' properties: #{}!
-Object subclass: #User
-	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
-	category: 'GitHub'!
-
-!User methodsFor: 'accessors'!
-
-login
-	^ login.
-! !
-
-!User methodsFor: 'initializers'!
-
-withData: aDict
-	" Seed the User object with data acquired from the API"
-	login := aDict at: 'login'.
-! !
-
-Object subclass: #Issue
-	instanceVariableNames: 'raw title body issueId number project projectOwner issueStatus comments fullProjectName'
-	category: 'GitHub'!
-
 Object subclass: #APIBase
 	instanceVariableNames: 'token authenticated'
 	category: 'GitHub'!
@@ -48,6 +27,87 @@ apiUrlFor: apiString
 	url := '', (self baseUrl), apiString.
 	authenticated ifTrue: [ url := '', url, '?access_token=', token ].
 	^ url.
+! !
+
+Object subclass: #Issue
+	instanceVariableNames: 'raw title body issueId number project projectOwner issueStatus comments fullProjectName projectName labels url'
+	category: 'GitHub'!
+
+!Issue methodsFor: 'accessors'!
+
+number
+	^ number.
+!
+
+projectName
+	^ projectName.
+!
+
+project
+	^ project.
+!
+
+projectOwner
+	^ projectOwner.
+!
+
+issueId
+	^ issueId.
+!
+
+comments
+	^ comments.
+!
+
+labels
+	^ labels.
+!
+
+title
+	^ title.
+!
+
+url
+	^ url.
+! !
+
+!Issue methodsFor: 'initializers'!
+
+withData: aDict
+	"Seed the Issue object based on aDict, which should
+	 be the individual elements of the `GET /issues` API call"
+	| urlParts |
+
+	raw := aDict.
+	issueId := aDict at: 'id'.
+	number := aDict at: 'number'.
+	title := aDict at: 'title'.
+	body := aDict at: 'body'.
+	comments := aDict at: 'comments'.
+	labels := aDict at: 'labels'.
+	url := aDict at: 'html_url'.
+
+	urlParts := <aDict['html_url'].split('/')>.
+	projectOwner := urlParts at: 4.
+	project := urlParts at: 5.
+	projectName := (urlParts at: 4), '/', (urlParts at: 5).
+! !
+
+Object subclass: #User
+	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
+	category: 'GitHub'!
+
+!User methodsFor: 'accessors'!
+
+login
+	^ login.
+! !
+
+!User methodsFor: 'initializers'!
+
+withData: aDict
+	" Seed the User object with data acquired from the API"
+	login := aDict at: 'login'.
 ! !
 
 APIBase subclass: #Users
@@ -80,7 +140,11 @@ issues: aPageCallback loadAll: shouldLoadAll
 	jQuery ajax: (self apiUrlFor: '/issues') options: #{
 			'dataType' -> 'jsonp'.
 			'success' -> [ :result |
-				aPageCallback value: (result data).
+				result data do: [ :item |
+					| issue |
+					issue := Issue new withData: item.
+					aPageCallback value: issue.
+				]
 			]
 	}.
 	^ true.
@@ -93,7 +157,11 @@ recentlyClosed: aPageCallback loadAll: shouldLoadAll
 	jQuery ajax: ((self apiUrlFor: '/issues'), '&state=closed&per_page=10') options: #{
 			'dataType' -> 'jsonp'.
 			'success' -> [ :result |
-				aPageCallback value: (result data).
+				result data do: [ :item |
+					| issue |
+					issue := Issue new withData: item.
+					aPageCallback value: issue.
+				]
 			]
 	}.
 	^ true.

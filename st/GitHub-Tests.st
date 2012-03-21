@@ -52,13 +52,69 @@ testLoadFromJSON
 ! !
 
 TestCase subclass: #IssuesTests
-	instanceVariableNames: 'object'
+	instanceVariableNames: 'object jsonString'
 	category: 'GitHub-Tests'!
 
 !IssuesTests methodsFor: 'scaffolding'!
 
 setUp
 	object := Issues new.
+	jsonString := '{
+    "url": "https://api.github.com/repos/octocat/Hello-World/issues/1",
+    "html_url": "https://github.com/octocat/Hello-World/issues/1",
+    "number": 1347,
+    "state": "open",
+    "title": "Found a bug",
+    "body": "Im having a problem with this.",
+    "user": {
+      "login": "octocat",
+      "id": 1,
+      "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+      "gravatar_id": "somehexcode",
+      "url": "https://api.github.com/users/octocat"
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/octocat/Hello-World/labels/bug",
+        "name": "bug",
+        "color": "f29513"
+      }
+    ],
+    "assignee": {
+      "login": "octocat",
+      "id": 1,
+      "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+      "gravatar_id": "somehexcode",
+      "url": "https://api.github.com/users/octocat"
+    },
+    "milestone": {
+      "url": "https://api.github.com/repos/octocat/Hello-World/milestones/1",
+      "number": 1,
+      "state": "open",
+      "title": "v1.0",
+      "description": "",
+      "creator": {
+        "login": "octocat",
+        "id": 1,
+        "avatar_url": "https://github.com/images/error/octocat_happy.gif",
+        "gravatar_id": "somehexcode",
+        "url": "https://api.github.com/users/octocat"
+      },
+      "open_issues": 4,
+      "closed_issues": 8,
+      "created_at": "2011-04-10T20:09:31Z",
+      "due_on": null
+    },
+    "comments": 0,
+    "pull_request": {
+      "html_url": "https://github.com/octocat/Hello-World/issues/1",
+      "diff_url": "https://github.com/octocat/Hello-World/issues/1.diff",
+      "patch_url": "https://github.com/octocat/Hello-World/issues/1.patch"
+    },
+    "closed_at": null,
+    "created_at": "2011-04-22T13:33:48Z",
+    "updated_at": "2011-04-22T13:33:48Z"
+  }'
 ! !
 
 !IssuesTests methodsFor: 'testcases'!
@@ -74,5 +130,20 @@ testApiUrlWithAToken
 	object setToken: 'deadbeef'.
 	result := object apiUrlFor: '/issues'.
 	self assert: 'https://api.github.com/issues?access_token=deadbeef' equals: result.
+!
+
+testLoadFromJSON
+	"Verify we can use #withData to create a proper Issue object"
+	| issue data |
+	data := (jQuery parseJSON: jsonString).
+	issue := Issue new withData: data.
+
+	self assert: 1347 equals: (issue number).
+	self assert: 'octocat/Hello-World' equals: (issue projectName).
+	self assert: 'octocat' equals: (issue projectOwner).
+	self assert: 'Hello-World' equals: (issue project).
+	self assert: 1 equals: (issue labels size).
+	self assert: 'Found a bug' equals: (issue title).
+	self assert: 'https://github.com/octocat/Hello-World/issues/1' equals: (issue url).
 ! !
 

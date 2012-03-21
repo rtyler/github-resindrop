@@ -1,32 +1,4 @@
 smalltalk.addPackage('GitHub', {});
-smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
-smalltalk.addMethod(
-unescape('_withData_'),
-smalltalk.method({
-selector: unescape('withData%3A'),
-fn: function (aDict){
-var self=this;
-(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
-return self;}
-}),
-smalltalk.User);
-
-smalltalk.addMethod(
-unescape('_login'),
-smalltalk.method({
-selector: unescape('login'),
-fn: function (){
-var self=this;
-return self['@login'];
-return self;}
-}),
-smalltalk.User);
-
-
-
-smalltalk.addClass('Issue', smalltalk.Object, ['raw', 'title', 'body', 'issueId', 'number', 'project', 'projectOwner', 'issueStatus', 'comments', 'fullProjectName'], 'GitHub');
-
-
 smalltalk.addClass('APIBase', smalltalk.Object, ['token', 'authenticated'], 'GitHub');
 smalltalk.addMethod(
 unescape('_baseUrl'),
@@ -79,6 +51,156 @@ smalltalk.APIBase);
 
 
 
+smalltalk.addClass('Issue', smalltalk.Object, ['raw', 'title', 'body', 'issueId', 'number', 'project', 'projectOwner', 'issueStatus', 'comments', 'fullProjectName', 'projectName', 'labels', 'url'], 'GitHub');
+smalltalk.addMethod(
+unescape('_withData_'),
+smalltalk.method({
+selector: unescape('withData%3A'),
+fn: function (aDict){
+var self=this;
+var urlParts=nil;
+(self['@raw']=aDict);
+(self['@issueId']=smalltalk.send(aDict, "_at_", ["id"]));
+(self['@number']=smalltalk.send(aDict, "_at_", ["number"]));
+(self['@title']=smalltalk.send(aDict, "_at_", ["title"]));
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@comments']=smalltalk.send(aDict, "_at_", ["comments"]));
+(self['@labels']=smalltalk.send(aDict, "_at_", ["labels"]));
+(self['@url']=smalltalk.send(aDict, "_at_", ["html_url"]));
+(urlParts=aDict['html_url'].split('/'));
+(self['@projectOwner']=smalltalk.send(urlParts, "_at_", [(4)]));
+(self['@project']=smalltalk.send(urlParts, "_at_", [(5)]));
+(self['@projectName']=smalltalk.send(smalltalk.send(smalltalk.send(urlParts, "_at_", [(4)]), "__comma", [unescape("/")]), "__comma", [smalltalk.send(urlParts, "_at_", [(5)])]));
+return self;}
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_number'),
+smalltalk.method({
+selector: unescape('number'),
+fn: function (){
+var self=this;
+return self['@number'];
+return self;}
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_projectName'),
+smalltalk.method({
+selector: unescape('projectName'),
+fn: function (){
+var self=this;
+return self['@projectName'];
+return self;}
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_project'),
+smalltalk.method({
+selector: unescape('project'),
+fn: function (){
+var self=this;
+return self['@project'];
+return self;}
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_projectOwner'),
+smalltalk.method({
+selector: unescape('projectOwner'),
+fn: function (){
+var self=this;
+return self['@projectOwner'];
+return self;}
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_issueId'),
+smalltalk.method({
+selector: unescape('issueId'),
+fn: function (){
+var self=this;
+return self['@issueId'];
+return self;}
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_comments'),
+smalltalk.method({
+selector: unescape('comments'),
+fn: function (){
+var self=this;
+return self['@comments'];
+return self;}
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_labels'),
+smalltalk.method({
+selector: unescape('labels'),
+fn: function (){
+var self=this;
+return self['@labels'];
+return self;}
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_title'),
+smalltalk.method({
+selector: unescape('title'),
+fn: function (){
+var self=this;
+return self['@title'];
+return self;}
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_url'),
+smalltalk.method({
+selector: unescape('url'),
+fn: function (){
+var self=this;
+return self['@url'];
+return self;}
+}),
+smalltalk.Issue);
+
+
+
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
+smalltalk.addMethod(
+unescape('_withData_'),
+smalltalk.method({
+selector: unescape('withData%3A'),
+fn: function (aDict){
+var self=this;
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
+return self;}
+}),
+smalltalk.User);
+
+smalltalk.addMethod(
+unescape('_login'),
+smalltalk.method({
+selector: unescape('login'),
+fn: function (){
+var self=this;
+return self['@login'];
+return self;}
+}),
+smalltalk.User);
+
+
+
 smalltalk.addClass('Users', smalltalk.APIBase, [], 'GitHub');
 smalltalk.addMethod(
 unescape('_fetchCurrent_'),
@@ -104,7 +226,8 @@ selector: unescape('issues%3AloadAll%3A'),
 fn: function (aPageCallback, shouldLoadAll){
 var self=this;
 try{((($receiver = self['@authenticated']).klass === smalltalk.Boolean) ? (! $receiver ? (function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_issues_loadAll_', fn: function(){return false}})})();})() : nil) : smalltalk.send($receiver, "_ifFalse_", [(function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_issues_loadAll_', fn: function(){return false}})})();})]));
-smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [smalltalk.send(self, "_apiUrlFor_", [unescape("/issues")]), smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){return smalltalk.send(aPageCallback, "_value_", [smalltalk.send(result, "_data", [])]);})])])]);
+smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [smalltalk.send(self, "_apiUrlFor_", [unescape("/issues")]), smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){return smalltalk.send(smalltalk.send(result, "_data", []), "_do_", [(function(item){var issue=nil;
+(issue=smalltalk.send(smalltalk.send((smalltalk.Issue || Issue), "_new", []), "_withData_", [item]));return smalltalk.send(aPageCallback, "_value_", [issue]);})]);})])])]);
 (function(){throw({name: 'stReturn', selector: '_issues_loadAll_', fn: function(){return true}})})();
 return self;
 } catch(e) {if(e.name === 'stReturn' && e.selector === '_issues_loadAll_'){return e.fn()} throw(e)}}
@@ -118,7 +241,8 @@ selector: unescape('recentlyClosed%3AloadAll%3A'),
 fn: function (aPageCallback, shouldLoadAll){
 var self=this;
 try{((($receiver = self['@authenticated']).klass === smalltalk.Boolean) ? (! $receiver ? (function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_recentlyClosed_loadAll_', fn: function(){return false}})})();})() : nil) : smalltalk.send($receiver, "_ifFalse_", [(function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_recentlyClosed_loadAll_', fn: function(){return false}})})();})]));
-smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [smalltalk.send(smalltalk.send(self, "_apiUrlFor_", [unescape("/issues")]), "__comma", [unescape("%26state%3Dclosed%26per_page%3D10")]), smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){return smalltalk.send(aPageCallback, "_value_", [smalltalk.send(result, "_data", [])]);})])])]);
+smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [smalltalk.send(smalltalk.send(self, "_apiUrlFor_", [unescape("/issues")]), "__comma", [unescape("%26state%3Dclosed%26per_page%3D10")]), smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){return smalltalk.send(smalltalk.send(result, "_data", []), "_do_", [(function(item){var issue=nil;
+(issue=smalltalk.send(smalltalk.send((smalltalk.Issue || Issue), "_new", []), "_withData_", [item]));return smalltalk.send(aPageCallback, "_value_", [issue]);})]);})])])]);
 (function(){throw({name: 'stReturn', selector: '_recentlyClosed_loadAll_', fn: function(){return true}})})();
 return self;
 } catch(e) {if(e.name === 'stReturn' && e.selector === '_recentlyClosed_loadAll_'){return e.fn()} throw(e)}}
