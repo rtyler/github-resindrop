@@ -1,4 +1,32 @@
 smalltalk.addPackage('GitHub', {});
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
+smalltalk.addMethod(
+unescape('_withData_'),
+smalltalk.method({
+selector: unescape('withData%3A'),
+fn: function (aDict){
+var self=this;
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
+return self;}
+}),
+smalltalk.User);
+
+smalltalk.addMethod(
+unescape('_login'),
+smalltalk.method({
+selector: unescape('login'),
+fn: function (){
+var self=this;
+return self['@login'];
+return self;}
+}),
+smalltalk.User);
+
+
+
+smalltalk.addClass('Issue', smalltalk.Object, ['raw', 'title', 'body', 'issueId', 'number', 'project', 'projectOwner', 'issueStatus', 'comments', 'fullProjectName'], 'GitHub');
+
+
 smalltalk.addClass('APIBase', smalltalk.Object, ['token', 'authenticated'], 'GitHub');
 smalltalk.addMethod(
 unescape('_baseUrl'),

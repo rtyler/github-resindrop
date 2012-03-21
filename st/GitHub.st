@@ -1,4 +1,25 @@
 Smalltalk current createPackage: 'GitHub' properties: #{}!
+Object subclass: #User
+	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
+	category: 'GitHub'!
+
+!User methodsFor: 'accessors'!
+
+login
+	^ login.
+! !
+
+!User methodsFor: 'initializers'!
+
+withData: aDict
+	" Seed the User object with data acquired from the API"
+	login := aDict at: 'login'.
+! !
+
+Object subclass: #Issue
+	instanceVariableNames: 'raw title body issueId number project projectOwner issueStatus comments fullProjectName'
+	category: 'GitHub'!
+
 Object subclass: #APIBase
 	instanceVariableNames: 'token authenticated'
 	category: 'GitHub'!
