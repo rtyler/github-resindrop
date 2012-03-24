@@ -1,28 +1,15 @@
 smalltalk.addPackage('GitHub', {});
-smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
 selector: unescape('withData%3A'),
 fn: function (aDict){
 var self=this;
-(self['@raw']=aDict);
-(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
-(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
 return self;}
 }),
-smalltalk.Comment);
-
-smalltalk.addMethod(
-unescape('_body'),
-smalltalk.method({
-selector: unescape('body'),
-fn: function (){
-var self=this;
-return self['@body'];
-return self;}
-}),
-smalltalk.Comment);
+smalltalk.User);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -33,7 +20,7 @@ var self=this;
 return self['@login'];
 return self;}
 }),
-smalltalk.Comment);
+smalltalk.User);
 
 
 
@@ -86,6 +73,44 @@ return url;
 return self;}
 }),
 smalltalk.APIBase);
+
+
+
+smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addMethod(
+unescape('_withData_'),
+smalltalk.method({
+selector: unescape('withData%3A'),
+fn: function (aDict){
+var self=this;
+(self['@raw']=aDict);
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+return self;}
+}),
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+fn: function (){
+var self=this;
+return self['@body'];
+return self;}
+}),
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_login'),
+smalltalk.method({
+selector: unescape('login'),
+fn: function (){
+var self=this;
+return self['@login'];
+return self;}
+}),
+smalltalk.Comment);
 
 
 
@@ -236,31 +261,6 @@ smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", 
 return self;}
 }),
 smalltalk.Issue);
-
-
-
-smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
-smalltalk.addMethod(
-unescape('_withData_'),
-smalltalk.method({
-selector: unescape('withData%3A'),
-fn: function (aDict){
-var self=this;
-(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
-return self;}
-}),
-smalltalk.User);
-
-smalltalk.addMethod(
-unescape('_login'),
-smalltalk.method({
-selector: unescape('login'),
-fn: function (){
-var self=this;
-return self['@login'];
-return self;}
-}),
-smalltalk.User);
 
 
 

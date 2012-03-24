@@ -1,5 +1,5 @@
 smalltalk.addPackage('GitHub', {});
-smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -7,32 +7,14 @@ selector: unescape('withData%3A'),
 category: 'initializers',
 fn: function (aDict){
 var self=this;
-(self['@raw']=aDict);
-(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
-(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
+source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
 messageSends: ["at:"],
 referencedClasses: []
 }),
-smalltalk.Comment);
-
-smalltalk.addMethod(
-unescape('_body'),
-smalltalk.method({
-selector: unescape('body'),
-category: 'accessors',
-fn: function (){
-var self=this;
-return self['@body'];
-return self;},
-args: [],
-source: unescape('body%0A%09%5E%20body.'),
-messageSends: [],
-referencedClasses: []
-}),
-smalltalk.Comment);
+smalltalk.User);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -48,7 +30,7 @@ source: unescape('login%0A%09%5E%20login.'),
 messageSends: [],
 referencedClasses: []
 }),
-smalltalk.Comment);
+smalltalk.User);
 
 
 
@@ -121,6 +103,59 @@ messageSends: [unescape("%2C"), "baseUrl", "ifTrue:"],
 referencedClasses: []
 }),
 smalltalk.APIBase);
+
+
+
+smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addMethod(
+unescape('_withData_'),
+smalltalk.method({
+selector: unescape('withData%3A'),
+category: 'initializers',
+fn: function (aDict){
+var self=this;
+(self['@raw']=aDict);
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+return self;},
+args: ["aDict"],
+source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
+messageSends: ["at:"],
+referencedClasses: []
+}),
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@body'];
+return self;},
+args: [],
+source: unescape('body%0A%09%5E%20body.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_login'),
+smalltalk.method({
+selector: unescape('login'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@login'];
+return self;},
+args: [],
+source: unescape('login%0A%09%5E%20login.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.Comment);
 
 
 
@@ -331,41 +366,6 @@ messageSends: ["apiUrlFor:", unescape("%2C"), "log:", "ajax:options:", unescape(
 referencedClasses: ["Comment"]
 }),
 smalltalk.Issue);
-
-
-
-smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
-smalltalk.addMethod(
-unescape('_withData_'),
-smalltalk.method({
-selector: unescape('withData%3A'),
-category: 'initializers',
-fn: function (aDict){
-var self=this;
-(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
-return self;},
-args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
-messageSends: ["at:"],
-referencedClasses: []
-}),
-smalltalk.User);
-
-smalltalk.addMethod(
-unescape('_login'),
-smalltalk.method({
-selector: unescape('login'),
-category: 'accessors',
-fn: function (){
-var self=this;
-return self['@login'];
-return self;},
-args: [],
-source: unescape('login%0A%09%5E%20login.'),
-messageSends: [],
-referencedClasses: []
-}),
-smalltalk.User);
 
 
 
