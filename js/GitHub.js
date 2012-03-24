@@ -1,4 +1,57 @@
 smalltalk.addPackage('GitHub', {});
+smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addMethod(
+unescape('_withData_'),
+smalltalk.method({
+selector: unescape('withData%3A'),
+category: 'initializers',
+fn: function (aDict){
+var self=this;
+(self['@raw']=aDict);
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+return self;},
+args: ["aDict"],
+source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
+messageSends: ["at:"],
+referencedClasses: []
+}),
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@body'];
+return self;},
+args: [],
+source: unescape('body%0A%09%5E%20body.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_login'),
+smalltalk.method({
+selector: unescape('login'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@login'];
+return self;},
+args: [],
+source: unescape('login%0A%09%5E%20login.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.Comment);
+
+
+
 smalltalk.addClass('APIBase', smalltalk.Object, ['token', 'authenticated'], 'GitHub');
 smalltalk.addMethod(
 unescape('_baseUrl'),
@@ -71,7 +124,7 @@ smalltalk.APIBase);
 
 
 
-smalltalk.addClass('Issue', smalltalk.Object, ['raw', 'title', 'body', 'issueId', 'number', 'project', 'projectOwner', 'issueStatus', 'comments', 'fullProjectName', 'projectName', 'labels', 'url'], 'GitHub');
+smalltalk.addClass('Issue', smalltalk.APIBase, ['raw', 'title', 'body', 'issueId', 'number', 'project', 'projectOwner', 'issueStatus', 'comments', 'fullProjectName', 'projectName', 'labels', 'url'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -244,6 +297,41 @@ referencedClasses: []
 }),
 smalltalk.Issue);
 
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@body'];
+return self;},
+args: [],
+source: unescape('body%0A%09%5E%20body.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_loadComments_'),
+smalltalk.method({
+selector: unescape('loadComments%3A'),
+category: 'actions',
+fn: function (aCallback){
+var self=this;
+var url=nil;
+(self['@url']=smalltalk.send(self, "_apiUrlFor_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(unescape("/repos/"), "__comma", [self['@projectName']]), "__comma", [unescape("/issues/")]), "__comma", [self['@number']]), "__comma", [unescape("/comments")])]));
+smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [self['@url']]);
+smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [self['@url'], smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(results){return smalltalk.send(aCallback, "_value_", [smalltalk.send(smalltalk.send(results, "_data", []), "_do_", [(function(data){return smalltalk.send(smalltalk.send((smalltalk.Comment || Comment), "_new", []), "_withData_", [data]);})])]);})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["error"]);})])])]);
+return self;},
+args: ["aCallback"],
+source: unescape('loadComments%3A%20aCallback%0A%09%22Starting%20loading%20the%20comments%20for%20this%20Issue%2C%20we%27re%20really%20only%20going%20to%20fetch%20one%20page%22%0A%09%22GET%20/repos/%3Auser/%3Arepo/issues/%3Anumber/comments%20%22%0A%0A%09%7C%20url%20%7C%0A%09url%20%3A%3D%20self%20apiUrlFor%3A%20%28%27/repos/%27%2C%20projectName%2C%20%27/issues/%27%2C%20number%2C%20%27/comments%27%29.%0A%09console%20log%3A%20url.%0A%09jQuery%20ajax%3A%20url%20options%3A%20%23%7B%0A%09%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%09%27success%27%20-%3E%20%5B%20%3Aresults%20%7C%0A%09%09%09%09aCallback%20value%3A%20%28results%20data%20do%3A%20%5B%20%3Adata%20%7C%20Comment%20new%20withData%3A%20data%20%5D%29.%0A%09%09%09%5D.%0A%09%09%09%27error%27%20-%3E%20%5B%20console%20log%3A%20%27error%27%20%5D%0A%09%7D.'),
+messageSends: ["apiUrlFor:", unescape("%2C"), "log:", "ajax:options:", unescape("-%3E"), "value:", "do:", "data", "withData:", "new"],
+referencedClasses: ["Comment"]
+}),
+smalltalk.Issue);
+
 
 
 smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
@@ -313,13 +401,13 @@ fn: function (aPageCallback, shouldLoadAll){
 var self=this;
 try{((($receiver = self['@authenticated']).klass === smalltalk.Boolean) ? (! $receiver ? (function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_issues_loadAll_', fn: function(){return false}})})();})() : nil) : smalltalk.send($receiver, "_ifFalse_", [(function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_issues_loadAll_', fn: function(){return false}})})();})]));
 smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [smalltalk.send(self, "_apiUrlFor_", [unescape("/issues")]), smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){return smalltalk.send(smalltalk.send(result, "_data", []), "_do_", [(function(item){var issue=nil;
-(issue=smalltalk.send(smalltalk.send((smalltalk.Issue || Issue), "_new", []), "_withData_", [item]));return smalltalk.send(aPageCallback, "_value_", [issue]);})]);})])])]);
+(issue=(function($rec){smalltalk.send($rec, "_withData_", [item]);return smalltalk.send($rec, "_setToken_", [self['@token']]);})(smalltalk.send((smalltalk.Issue || Issue), "_new", [])));return smalltalk.send(aPageCallback, "_value_", [issue]);})]);})])])]);
 (function(){throw({name: 'stReturn', selector: '_issues_loadAll_', fn: function(){return true}})})();
 return self;
 } catch(e) {if(e.name === 'stReturn' && e.selector === '_issues_loadAll_'){return e.fn()} throw(e)}},
 args: ["aPageCallback", "shouldLoadAll"],
-source: unescape('issues%3A%20aPageCallback%20loadAll%3A%20shouldLoadAll%0A%09%22Call%20aPageCallback%20with%20every%20page%20of%20issues%20loaded%20from%20GitHub%22%0A%09authenticated%20ifFalse%3A%20%5B%20console%20log%3A%20%27Cannot%20load%20issues%20unless%20we%20have%20an%20access%20token%27.%20%5E%20false%20%5D.%0A%0A%09jQuery%20ajax%3A%20%28self%20apiUrlFor%3A%20%27/issues%27%29%20options%3A%20%23%7B%0A%09%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%09%27success%27%20-%3E%20%5B%20%3Aresult%20%7C%0A%09%09%09%09result%20data%20do%3A%20%5B%20%3Aitem%20%7C%0A%09%09%09%09%09%7C%20issue%20%7C%0A%09%09%09%09%09issue%20%3A%3D%20Issue%20new%20withData%3A%20item.%0A%09%09%09%09%09aPageCallback%20value%3A%20issue.%0A%09%09%09%09%5D%0A%09%09%09%5D%0A%09%7D.%0A%09%5E%20true.%20'),
-messageSends: ["ifFalse:", "log:", "ajax:options:", "apiUrlFor:", unescape("-%3E"), "do:", "data", "withData:", "new", "value:"],
+source: unescape('issues%3A%20aPageCallback%20loadAll%3A%20shouldLoadAll%0A%09%22Call%20aPageCallback%20with%20every%20page%20of%20issues%20loaded%20from%20GitHub%22%0A%09authenticated%20ifFalse%3A%20%5B%20console%20log%3A%20%27Cannot%20load%20issues%20unless%20we%20have%20an%20access%20token%27.%20%5E%20false%20%5D.%0A%0A%09jQuery%20ajax%3A%20%28self%20apiUrlFor%3A%20%27/issues%27%29%20options%3A%20%23%7B%0A%09%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%09%27success%27%20-%3E%20%5B%20%3Aresult%20%7C%0A%09%09%09%09result%20data%20do%3A%20%5B%20%3Aitem%20%7C%0A%09%09%09%09%09%7C%20issue%20%7C%0A%09%09%09%09%09issue%20%3A%3D%20Issue%20new%20withData%3A%20item%3B%20setToken%3A%20token.%0A%09%09%09%09%09aPageCallback%20value%3A%20issue.%0A%09%09%09%09%5D%0A%09%09%09%5D%0A%09%7D.%0A%09%5E%20true.%20'),
+messageSends: ["ifFalse:", "log:", "ajax:options:", "apiUrlFor:", unescape("-%3E"), "do:", "data", "withData:", "setToken:", "new", "value:"],
 referencedClasses: ["Issue"]
 }),
 smalltalk.Issues);
@@ -333,13 +421,13 @@ fn: function (aPageCallback, shouldLoadAll){
 var self=this;
 try{((($receiver = self['@authenticated']).klass === smalltalk.Boolean) ? (! $receiver ? (function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_recentlyClosed_loadAll_', fn: function(){return false}})})();})() : nil) : smalltalk.send($receiver, "_ifFalse_", [(function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_recentlyClosed_loadAll_', fn: function(){return false}})})();})]));
 smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [smalltalk.send(smalltalk.send(self, "_apiUrlFor_", [unescape("/issues")]), "__comma", [unescape("%26state%3Dclosed%26per_page%3D10")]), smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){return smalltalk.send(smalltalk.send(result, "_data", []), "_do_", [(function(item){var issue=nil;
-(issue=smalltalk.send(smalltalk.send((smalltalk.Issue || Issue), "_new", []), "_withData_", [item]));return smalltalk.send(aPageCallback, "_value_", [issue]);})]);})])])]);
+(issue=(function($rec){smalltalk.send($rec, "_withData_", [item]);return smalltalk.send($rec, "_setToken_", [self['@token']]);})(smalltalk.send((smalltalk.Issue || Issue), "_new", [])));return smalltalk.send(aPageCallback, "_value_", [issue]);})]);})])])]);
 (function(){throw({name: 'stReturn', selector: '_recentlyClosed_loadAll_', fn: function(){return true}})})();
 return self;
 } catch(e) {if(e.name === 'stReturn' && e.selector === '_recentlyClosed_loadAll_'){return e.fn()} throw(e)}},
 args: ["aPageCallback", "shouldLoadAll"],
-source: unescape('recentlyClosed%3A%20aPageCallback%20loadAll%3A%20shouldLoadAll%0A%09%22Call%20aPageCallback%20with%20pages%20of%20issues%20that%20have%20been%20closed%20in%20the%20last%20week%20%22%0A%09authenticated%20ifFalse%3A%20%5B%20console%20log%3A%20%27Cannot%20load%20issues%20unless%20we%20have%20an%20access%20token%27.%20%5E%20false%20%5D.%0A%0A%09jQuery%20ajax%3A%20%28%28self%20apiUrlFor%3A%20%27/issues%27%29%2C%20%27%26state%3Dclosed%26per_page%3D10%27%29%20options%3A%20%23%7B%0A%09%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%09%27success%27%20-%3E%20%5B%20%3Aresult%20%7C%0A%09%09%09%09result%20data%20do%3A%20%5B%20%3Aitem%20%7C%0A%09%09%09%09%09%7C%20issue%20%7C%0A%09%09%09%09%09issue%20%3A%3D%20Issue%20new%20withData%3A%20item.%0A%09%09%09%09%09aPageCallback%20value%3A%20issue.%0A%09%09%09%09%5D%0A%09%09%09%5D%0A%09%7D.%0A%09%5E%20true.%20'),
-messageSends: ["ifFalse:", "log:", "ajax:options:", unescape("%2C"), "apiUrlFor:", unescape("-%3E"), "do:", "data", "withData:", "new", "value:"],
+source: unescape('recentlyClosed%3A%20aPageCallback%20loadAll%3A%20shouldLoadAll%0A%09%22Call%20aPageCallback%20with%20pages%20of%20issues%20that%20have%20been%20closed%20in%20the%20last%20week%20%22%0A%09authenticated%20ifFalse%3A%20%5B%20console%20log%3A%20%27Cannot%20load%20issues%20unless%20we%20have%20an%20access%20token%27.%20%5E%20false%20%5D.%0A%0A%09jQuery%20ajax%3A%20%28%28self%20apiUrlFor%3A%20%27/issues%27%29%2C%20%27%26state%3Dclosed%26per_page%3D10%27%29%20options%3A%20%23%7B%0A%09%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%09%27success%27%20-%3E%20%5B%20%3Aresult%20%7C%0A%09%09%09%09result%20data%20do%3A%20%5B%20%3Aitem%20%7C%0A%09%09%09%09%09%7C%20issue%20%7C%0A%09%09%09%09%09issue%20%3A%3D%20Issue%20new%20withData%3A%20item%3B%20setToken%3A%20token.%0A%09%09%09%09%09aPageCallback%20value%3A%20issue.%0A%09%09%09%09%5D%0A%09%09%09%5D%0A%09%7D.%0A%09%5E%20true.%20'),
+messageSends: ["ifFalse:", "log:", "ajax:options:", unescape("%2C"), "apiUrlFor:", unescape("-%3E"), "do:", "data", "withData:", "setToken:", "new", "value:"],
 referencedClasses: ["Issue"]
 }),
 smalltalk.Issues);

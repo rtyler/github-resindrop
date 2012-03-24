@@ -1,4 +1,26 @@
 Smalltalk current createPackage: 'GitHub' properties: #{}!
+Object subclass: #Comment
+	instanceVariableNames: 'raw login body created_at'
+	category: 'GitHub'!
+
+!Comment methodsFor: 'accessors'!
+
+body
+	^ body.
+!
+
+login
+	^ login.
+! !
+
+!Comment methodsFor: 'initializers'!
+
+withData: aDict
+	raw := aDict.
+	body := aDict at: 'body'.
+	login := (aDict at: 'user') at: 'login'.
+! !
+
 Object subclass: #APIBase
 	instanceVariableNames: 'token authenticated'
 	category: 'GitHub'!
@@ -29,7 +51,7 @@ apiUrlFor: apiString
 	^ url.
 ! !
 
-Object subclass: #Issue
+APIBase subclass: #Issue
 	instanceVariableNames: 'raw title body issueId number project projectOwner issueStatus comments fullProjectName projectName labels url'
 	category: 'GitHub'!
 
@@ -69,6 +91,28 @@ title
 
 url
 	^ url.
+!
+
+body
+	^ body.
+! !
+
+!Issue methodsFor: 'actions'!
+
+loadComments: aCallback
+	"Starting loading the comments for this Issue, we're really only going to fetch one page"
+	"GET /repos/:user/:repo/issues/:number/comments "
+
+	| url |
+	url := self apiUrlFor: ('/repos/', projectName, '/issues/', number, '/comments').
+	console log: url.
+	jQuery ajax: url options: #{
+			'dataType' -> 'jsonp'.
+			'success' -> [ :results |
+				aCallback value: (results data do: [ :data | Comment new withData: data ]).
+			].
+			'error' -> [ console log: 'error' ]
+	}.
 ! !
 
 !Issue methodsFor: 'initializers'!
@@ -142,7 +186,7 @@ issues: aPageCallback loadAll: shouldLoadAll
 			'success' -> [ :result |
 				result data do: [ :item |
 					| issue |
-					issue := Issue new withData: item.
+					issue := Issue new withData: item; setToken: token.
 					aPageCallback value: issue.
 				]
 			]
@@ -159,7 +203,7 @@ recentlyClosed: aPageCallback loadAll: shouldLoadAll
 			'success' -> [ :result |
 				result data do: [ :item |
 					| issue |
-					issue := Issue new withData: item.
+					issue := Issue new withData: item; setToken: token.
 					aPageCallback value: issue.
 				]
 			]
