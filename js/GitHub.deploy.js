@@ -257,7 +257,7 @@ var self=this;
 var url=nil;
 (self['@url']=smalltalk.send(self, "_apiUrlFor_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(unescape("/repos/"), "__comma", [self['@projectName']]), "__comma", [unescape("/issues/")]), "__comma", [self['@number']]), "__comma", [unescape("/comments")])]));
 smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [self['@url']]);
-smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [self['@url'], smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(results){return smalltalk.send(aCallback, "_value_", [smalltalk.send(smalltalk.send(results, "_data", []), "_do_", [(function(data){return smalltalk.send(smalltalk.send((smalltalk.Comment || Comment), "_new", []), "_withData_", [data]);})])]);})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["error"]);})])])]);
+smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [self['@url'], smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(results){return smalltalk.send(aCallback, "_value_", [smalltalk.send(smalltalk.send(results, "_data", []), "_collect_", [(function(data){return smalltalk.send(smalltalk.send((smalltalk.Comment || Comment), "_new", []), "_withData_", [data]);})])]);})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["error"]);})])])]);
 return self;}
 }),
 smalltalk.Issue);

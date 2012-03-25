@@ -126,7 +126,7 @@ loadComments: aCallback
 	jQuery ajax: url options: #{
 			'dataType' -> 'jsonp'.
 			'success' -> [ :results |
-				aCallback value: (results data do: [ :data | Comment new withData: data ]).
+				aCallback value: (results data collect: [ :data | Comment new withData: data ]).
 			].
 			'error' -> [ console log: 'error' ]
 	}.
