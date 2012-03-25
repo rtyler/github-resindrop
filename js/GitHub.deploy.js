@@ -1,15 +1,28 @@
 smalltalk.addPackage('GitHub', {});
-smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
+smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
 selector: unescape('withData%3A'),
 fn: function (aDict){
 var self=this;
-(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
+(self['@raw']=aDict);
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
 return self;}
 }),
-smalltalk.User);
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+fn: function (){
+var self=this;
+return self['@body'];
+return self;}
+}),
+smalltalk.Comment);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -20,7 +33,7 @@ var self=this;
 return self['@login'];
 return self;}
 }),
-smalltalk.User);
+smalltalk.Comment);
 
 
 
@@ -76,30 +89,17 @@ smalltalk.APIBase);
 
 
 
-smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
 selector: unescape('withData%3A'),
 fn: function (aDict){
 var self=this;
-(self['@raw']=aDict);
-(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
-(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
 return self;}
 }),
-smalltalk.Comment);
-
-smalltalk.addMethod(
-unescape('_body'),
-smalltalk.method({
-selector: unescape('body'),
-fn: function (){
-var self=this;
-return self['@body'];
-return self;}
-}),
-smalltalk.Comment);
+smalltalk.User);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -110,7 +110,7 @@ var self=this;
 return self['@login'];
 return self;}
 }),
-smalltalk.Comment);
+smalltalk.User);
 
 
 
@@ -243,7 +243,7 @@ smalltalk.method({
 selector: unescape('body'),
 fn: function (){
 var self=this;
-return self['@body'];
+return (($receiver = self['@body']) == nil || $receiver == undefined) ? (function(){return (self['@body']="");})() : $receiver;
 return self;}
 }),
 smalltalk.Issue);

@@ -1,19 +1,24 @@
 Smalltalk current createPackage: 'GitHub' properties: #{}!
-Object subclass: #User
-	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
+Object subclass: #Comment
+	instanceVariableNames: 'raw login body created_at'
 	category: 'GitHub'!
 
-!User methodsFor: 'accessors'!
+!Comment methodsFor: 'accessors'!
+
+body
+	^ body.
+!
 
 login
 	^ login.
 ! !
 
-!User methodsFor: 'initializers'!
+!Comment methodsFor: 'initializers'!
 
 withData: aDict
-	" Seed the User object with data acquired from the API"
-	login := aDict at: 'login'.
+	raw := aDict.
+	body := aDict at: 'body'.
+	login := (aDict at: 'user') at: 'login'.
 ! !
 
 Object subclass: #APIBase
@@ -46,26 +51,21 @@ apiUrlFor: apiString
 	^ url.
 ! !
 
-Object subclass: #Comment
-	instanceVariableNames: 'raw login body created_at'
+Object subclass: #User
+	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
 	category: 'GitHub'!
 
-!Comment methodsFor: 'accessors'!
-
-body
-	^ body.
-!
+!User methodsFor: 'accessors'!
 
 login
 	^ login.
 ! !
 
-!Comment methodsFor: 'initializers'!
+!User methodsFor: 'initializers'!
 
 withData: aDict
-	raw := aDict.
-	body := aDict at: 'body'.
-	login := (aDict at: 'user') at: 'login'.
+	" Seed the User object with data acquired from the API"
+	login := aDict at: 'login'.
 ! !
 
 APIBase subclass: #Issue
@@ -111,7 +111,7 @@ url
 !
 
 body
-	^ body.
+	^ body ifNil: [ body := '' ].
 ! !
 
 !Issue methodsFor: 'actions'!
