@@ -122,7 +122,6 @@ loadComments: aCallback
 
 	| url |
 	url := self apiUrlFor: ('/repos/', projectName, '/issues/', number, '/comments').
-	console log: url.
 	jQuery ajax: url options: #{
 			'dataType' -> 'jsonp'.
 			'success' -> [ :results |
