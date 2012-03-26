@@ -1,5 +1,5 @@
 smalltalk.addPackage('GitHub', {});
-smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
+smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -7,14 +7,32 @@ selector: unescape('withData%3A'),
 category: 'initializers',
 fn: function (aDict){
 var self=this;
-(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
+(self['@raw']=aDict);
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
+source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
 messageSends: ["at:"],
 referencedClasses: []
 }),
-smalltalk.User);
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@body'];
+return self;},
+args: [],
+source: unescape('body%0A%09%5E%20body.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.Comment);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -30,7 +48,7 @@ source: unescape('login%0A%09%5E%20login.'),
 messageSends: [],
 referencedClasses: []
 }),
-smalltalk.User);
+smalltalk.Comment);
 
 
 
@@ -105,8 +123,24 @@ referencedClasses: []
 smalltalk.APIBase);
 
 
+smalltalk.addMethod(
+unescape('_baseUrl'),
+smalltalk.method({
+selector: unescape('baseUrl'),
+category: 'not yet classified',
+fn: function (){
+var self=this;
+return unescape("https%3A//api.github.com");
+return self;},
+args: [],
+source: unescape('baseUrl%0A%09%22Return%20the%20GitHub%20API%20url%20base%22%0A%09%5E%20%27https%3A//api.github.com%27.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.APIBase.klass);
 
-smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -114,32 +148,14 @@ selector: unescape('withData%3A'),
 category: 'initializers',
 fn: function (aDict){
 var self=this;
-(self['@raw']=aDict);
-(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
-(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
+source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
 messageSends: ["at:"],
 referencedClasses: []
 }),
-smalltalk.Comment);
-
-smalltalk.addMethod(
-unescape('_body'),
-smalltalk.method({
-selector: unescape('body'),
-category: 'accessors',
-fn: function (){
-var self=this;
-return self['@body'];
-return self;},
-args: [],
-source: unescape('body%0A%09%5E%20body.'),
-messageSends: [],
-referencedClasses: []
-}),
-smalltalk.Comment);
+smalltalk.User);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -155,7 +171,7 @@ source: unescape('login%0A%09%5E%20login.'),
 messageSends: [],
 referencedClasses: []
 }),
-smalltalk.Comment);
+smalltalk.User);
 
 
 
@@ -448,5 +464,41 @@ referencedClasses: ["Issue"]
 }),
 smalltalk.Issues);
 
+
+
+smalltalk.addClass('Repo', smalltalk.APIBase, ['token', 'authenticated'], 'GitHub');
+
+smalltalk.addMethod(
+unescape('_collaboratorsFor_'),
+smalltalk.method({
+selector: unescape('collaboratorsFor%3A'),
+category: 'api-calls',
+fn: function (fullRepoName){
+var self=this;
+
+return self;},
+args: ["fullRepoName"],
+source: unescape('collaboratorsFor%3A%20fullRepoName%0A%09%22A%20fullRepoName%20should%20be%20in%20the%20format%20of%20%27rtyler/Hubboard%27%20%28for%20example%29%22%0A%09'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.Repo.klass);
+
+smalltalk.addMethod(
+unescape('_collaboratorsFor_with_'),
+smalltalk.method({
+selector: unescape('collaboratorsFor%3Awith%3A'),
+category: 'api-calls',
+fn: function (fullRepoName, aBlock){
+var self=this;
+smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/repos/")]), "__comma", [fullRepoName]), "__comma", [unescape("/collaborators")]), smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){return smalltalk.send(aBlock, "_value_", [smalltalk.send(result, "_data", [])]);})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [unescape("Error%20calling%20%23collaboratorsFor")]);})])])]);
+return true;
+return self;},
+args: ["fullRepoName", "aBlock"],
+source: unescape('collaboratorsFor%3A%20fullRepoName%20with%3A%20aBlock%0A%09%22A%20fullRepoName%20should%20be%20in%20the%20format%20of%20%27rtyler/Hubboard%27%20%28for%20example%29%22%0A%09jQuery%20ajax%3A%20%28%28self%20baseUrl%29%2C%20%27/repos/%27%2C%20fullRepoName%2C%20%27/collaborators%27%29%20options%3A%20%23%7B%0A%09%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%09%27success%27%20-%3E%20%5B%20%3Aresult%20%7C%20aBlock%20value%3A%20%28result%20data%29%20%5D.%0A%09%09%09%27error%27%20-%3E%20%5B%20console%20log%3A%20%27Error%20calling%20%23collaboratorsFor%27%20%5D%0A%09%7D.%0A%09%5E%20true.%20'),
+messageSends: ["ajax:options:", unescape("%2C"), "baseUrl", unescape("-%3E"), "value:", "data", "log:"],
+referencedClasses: []
+}),
+smalltalk.Repo.klass);
 
 
