@@ -1,24 +1,19 @@
 Smalltalk current createPackage: 'GitHub' properties: #{}!
-Object subclass: #Comment
-	instanceVariableNames: 'raw login body created_at'
+Object subclass: #User
+	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
 	category: 'GitHub'!
 
-!Comment methodsFor: 'accessors'!
-
-body
-	^ body.
-!
+!User methodsFor: 'accessors'!
 
 login
 	^ login.
 ! !
 
-!Comment methodsFor: 'initializers'!
+!User methodsFor: 'initializers'!
 
 withData: aDict
-	raw := aDict.
-	body := aDict at: 'body'.
-	login := (aDict at: 'user') at: 'login'.
+	" Seed the User object with data acquired from the API"
+	login := aDict at: 'login'.
 ! !
 
 Object subclass: #APIBase
@@ -51,25 +46,30 @@ apiUrlFor: apiString
 	^ url.
 ! !
 
-Object subclass: #User
-	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
+Object subclass: #Comment
+	instanceVariableNames: 'raw login body created_at'
 	category: 'GitHub'!
 
-!User methodsFor: 'accessors'!
+!Comment methodsFor: 'accessors'!
+
+body
+	^ body.
+!
 
 login
 	^ login.
 ! !
 
-!User methodsFor: 'initializers'!
+!Comment methodsFor: 'initializers'!
 
 withData: aDict
-	" Seed the User object with data acquired from the API"
-	login := aDict at: 'login'.
+	raw := aDict.
+	body := aDict at: 'body'.
+	login := (aDict at: 'user') at: 'login'.
 ! !
 
 APIBase subclass: #Issue
-	instanceVariableNames: 'raw title body issueId number project projectOwner issueStatus comments fullProjectName projectName labels url'
+	instanceVariableNames: 'raw title body issueId number project projectOwner issueStatus comments fullProjectName projectName labels url pullRequest'
 	category: 'GitHub'!
 
 !Issue methodsFor: 'accessors'!
@@ -146,11 +146,17 @@ withData: aDict
 	comments := aDict at: 'comments'.
 	labels := aDict at: 'labels'.
 	url := aDict at: 'html_url'.
+	pullRequest := (aDict at: 'pull_request') at: 'html_url'.
 
 	urlParts := <aDict['html_url'].split('/')>.
 	projectOwner := urlParts at: 4.
 	project := urlParts at: 5.
 	projectName := (urlParts at: 4), '/', (urlParts at: 5).
+!
+
+pullRequest
+	"Return the URL to the pull request in question "
+	^ pullRequest.
 ! !
 
 APIBase subclass: #Users

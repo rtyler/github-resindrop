@@ -1,5 +1,5 @@
 smalltalk.addPackage('GitHub', {});
-smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -7,32 +7,14 @@ selector: unescape('withData%3A'),
 category: 'initializers',
 fn: function (aDict){
 var self=this;
-(self['@raw']=aDict);
-(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
-(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
+source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
 messageSends: ["at:"],
 referencedClasses: []
 }),
-smalltalk.Comment);
-
-smalltalk.addMethod(
-unescape('_body'),
-smalltalk.method({
-selector: unescape('body'),
-category: 'accessors',
-fn: function (){
-var self=this;
-return self['@body'];
-return self;},
-args: [],
-source: unescape('body%0A%09%5E%20body.'),
-messageSends: [],
-referencedClasses: []
-}),
-smalltalk.Comment);
+smalltalk.User);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -48,7 +30,7 @@ source: unescape('login%0A%09%5E%20login.'),
 messageSends: [],
 referencedClasses: []
 }),
-smalltalk.Comment);
+smalltalk.User);
 
 
 
@@ -124,7 +106,7 @@ smalltalk.APIBase);
 
 
 
-smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
+smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -132,14 +114,32 @@ selector: unescape('withData%3A'),
 category: 'initializers',
 fn: function (aDict){
 var self=this;
-(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
+(self['@raw']=aDict);
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
+source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
 messageSends: ["at:"],
 referencedClasses: []
 }),
-smalltalk.User);
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@body'];
+return self;},
+args: [],
+source: unescape('body%0A%09%5E%20body.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.Comment);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -155,11 +155,11 @@ source: unescape('login%0A%09%5E%20login.'),
 messageSends: [],
 referencedClasses: []
 }),
-smalltalk.User);
+smalltalk.Comment);
 
 
 
-smalltalk.addClass('Issue', smalltalk.APIBase, ['raw', 'title', 'body', 'issueId', 'number', 'project', 'projectOwner', 'issueStatus', 'comments', 'fullProjectName', 'projectName', 'labels', 'url'], 'GitHub');
+smalltalk.addClass('Issue', smalltalk.APIBase, ['raw', 'title', 'body', 'issueId', 'number', 'project', 'projectOwner', 'issueStatus', 'comments', 'fullProjectName', 'projectName', 'labels', 'url', 'pullRequest'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -176,13 +176,14 @@ var urlParts=nil;
 (self['@comments']=smalltalk.send(aDict, "_at_", ["comments"]));
 (self['@labels']=smalltalk.send(aDict, "_at_", ["labels"]));
 (self['@url']=smalltalk.send(aDict, "_at_", ["html_url"]));
+(self['@pullRequest']=smalltalk.send(smalltalk.send(aDict, "_at_", ["pull_request"]), "_at_", ["html_url"]));
 (urlParts=aDict['html_url'].split('/'));
 (self['@projectOwner']=smalltalk.send(urlParts, "_at_", [(4)]));
 (self['@project']=smalltalk.send(urlParts, "_at_", [(5)]));
 (self['@projectName']=smalltalk.send(smalltalk.send(smalltalk.send(urlParts, "_at_", [(4)]), "__comma", [unescape("/")]), "__comma", [smalltalk.send(urlParts, "_at_", [(5)])]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09%22Seed%20the%20Issue%20object%20based%20on%20aDict%2C%20which%20should%0A%09%20be%20the%20individual%20elements%20of%20the%20%60GET%20/issues%60%20API%20call%22%0A%09%7C%20urlParts%20%7C%0A%0A%09raw%20%3A%3D%20aDict.%0A%09issueId%20%3A%3D%20aDict%20at%3A%20%27id%27.%0A%09number%20%3A%3D%20aDict%20at%3A%20%27number%27.%0A%09title%20%3A%3D%20aDict%20at%3A%20%27title%27.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09comments%20%3A%3D%20aDict%20at%3A%20%27comments%27.%0A%09labels%20%3A%3D%20aDict%20at%3A%20%27labels%27.%0A%09url%20%3A%3D%20aDict%20at%3A%20%27html_url%27.%0A%0A%09urlParts%20%3A%3D%20%3CaDict%5B%27html_url%27%5D.split%28%27/%27%29%3E.%0A%09projectOwner%20%3A%3D%20urlParts%20at%3A%204.%0A%09project%20%3A%3D%20urlParts%20at%3A%205.%0A%09projectName%20%3A%3D%20%28urlParts%20at%3A%204%29%2C%20%27/%27%2C%20%28urlParts%20at%3A%205%29.'),
+source: unescape('withData%3A%20aDict%0A%09%22Seed%20the%20Issue%20object%20based%20on%20aDict%2C%20which%20should%0A%09%20be%20the%20individual%20elements%20of%20the%20%60GET%20/issues%60%20API%20call%22%0A%09%7C%20urlParts%20%7C%0A%0A%09raw%20%3A%3D%20aDict.%0A%09issueId%20%3A%3D%20aDict%20at%3A%20%27id%27.%0A%09number%20%3A%3D%20aDict%20at%3A%20%27number%27.%0A%09title%20%3A%3D%20aDict%20at%3A%20%27title%27.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09comments%20%3A%3D%20aDict%20at%3A%20%27comments%27.%0A%09labels%20%3A%3D%20aDict%20at%3A%20%27labels%27.%0A%09url%20%3A%3D%20aDict%20at%3A%20%27html_url%27.%0A%09pullRequest%20%3A%3D%20%28aDict%20at%3A%20%27pull_request%27%29%20at%3A%20%27html_url%27.%0A%0A%09urlParts%20%3A%3D%20%3CaDict%5B%27html_url%27%5D.split%28%27/%27%29%3E.%0A%09projectOwner%20%3A%3D%20urlParts%20at%3A%204.%0A%09project%20%3A%3D%20urlParts%20at%3A%205.%0A%09projectName%20%3A%3D%20%28urlParts%20at%3A%204%29%2C%20%27/%27%2C%20%28urlParts%20at%3A%205%29.'),
 messageSends: ["at:", unescape("%2C")],
 referencedClasses: []
 }),
@@ -363,6 +364,22 @@ args: ["aCallback"],
 source: unescape('loadComments%3A%20aCallback%0A%09%22Starting%20loading%20the%20comments%20for%20this%20Issue%2C%20we%27re%20really%20only%20going%20to%20fetch%20one%20page%22%0A%09%22GET%20/repos/%3Auser/%3Arepo/issues/%3Anumber/comments%20%22%0A%0A%09%7C%20url%20%7C%0A%09url%20%3A%3D%20self%20apiUrlFor%3A%20%28%27/repos/%27%2C%20projectName%2C%20%27/issues/%27%2C%20number%2C%20%27/comments%27%29.%0A%09jQuery%20ajax%3A%20url%20options%3A%20%23%7B%0A%09%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%09%27success%27%20-%3E%20%5B%20%3Aresults%20%7C%0A%09%09%09%09aCallback%20value%3A%20%28results%20data%20collect%3A%20%5B%20%3Adata%20%7C%20Comment%20new%20withData%3A%20data%20%5D%29.%0A%09%09%09%5D.%0A%09%09%09%27error%27%20-%3E%20%5B%20console%20log%3A%20%27error%27%20%5D%0A%09%7D.'),
 messageSends: ["apiUrlFor:", unescape("%2C"), "ajax:options:", unescape("-%3E"), "value:", "collect:", "data", "withData:", "new", "log:"],
 referencedClasses: ["Comment"]
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_pullRequest'),
+smalltalk.method({
+selector: unescape('pullRequest'),
+category: 'initializers',
+fn: function (){
+var self=this;
+return self['@pullRequest'];
+return self;},
+args: [],
+source: unescape('pullRequest%0A%09%22Return%20the%20URL%20to%20the%20pull%20request%20in%20question%20%22%0A%09%5E%20pullRequest.'),
+messageSends: [],
+referencedClasses: []
 }),
 smalltalk.Issue);
 

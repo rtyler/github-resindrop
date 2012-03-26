@@ -1,28 +1,15 @@
 smalltalk.addPackage('GitHub', {});
-smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
 selector: unescape('withData%3A'),
 fn: function (aDict){
 var self=this;
-(self['@raw']=aDict);
-(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
-(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
 return self;}
 }),
-smalltalk.Comment);
-
-smalltalk.addMethod(
-unescape('_body'),
-smalltalk.method({
-selector: unescape('body'),
-fn: function (){
-var self=this;
-return self['@body'];
-return self;}
-}),
-smalltalk.Comment);
+smalltalk.User);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -33,7 +20,7 @@ var self=this;
 return self['@login'];
 return self;}
 }),
-smalltalk.Comment);
+smalltalk.User);
 
 
 
@@ -89,17 +76,30 @@ smalltalk.APIBase);
 
 
 
-smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
+smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
 selector: unescape('withData%3A'),
 fn: function (aDict){
 var self=this;
-(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
+(self['@raw']=aDict);
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
 return self;}
 }),
-smalltalk.User);
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+fn: function (){
+var self=this;
+return self['@body'];
+return self;}
+}),
+smalltalk.Comment);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -110,11 +110,11 @@ var self=this;
 return self['@login'];
 return self;}
 }),
-smalltalk.User);
+smalltalk.Comment);
 
 
 
-smalltalk.addClass('Issue', smalltalk.APIBase, ['raw', 'title', 'body', 'issueId', 'number', 'project', 'projectOwner', 'issueStatus', 'comments', 'fullProjectName', 'projectName', 'labels', 'url'], 'GitHub');
+smalltalk.addClass('Issue', smalltalk.APIBase, ['raw', 'title', 'body', 'issueId', 'number', 'project', 'projectOwner', 'issueStatus', 'comments', 'fullProjectName', 'projectName', 'labels', 'url', 'pullRequest'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -130,6 +130,7 @@ var urlParts=nil;
 (self['@comments']=smalltalk.send(aDict, "_at_", ["comments"]));
 (self['@labels']=smalltalk.send(aDict, "_at_", ["labels"]));
 (self['@url']=smalltalk.send(aDict, "_at_", ["html_url"]));
+(self['@pullRequest']=smalltalk.send(smalltalk.send(aDict, "_at_", ["pull_request"]), "_at_", ["html_url"]));
 (urlParts=aDict['html_url'].split('/'));
 (self['@projectOwner']=smalltalk.send(urlParts, "_at_", [(4)]));
 (self['@project']=smalltalk.send(urlParts, "_at_", [(5)]));
@@ -257,6 +258,17 @@ var self=this;
 var url=nil;
 (self['@url']=smalltalk.send(self, "_apiUrlFor_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(unescape("/repos/"), "__comma", [self['@projectName']]), "__comma", [unescape("/issues/")]), "__comma", [self['@number']]), "__comma", [unescape("/comments")])]));
 smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [self['@url'], smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(results){return smalltalk.send(aCallback, "_value_", [smalltalk.send(smalltalk.send(results, "_data", []), "_collect_", [(function(data){return smalltalk.send(smalltalk.send((smalltalk.Comment || Comment), "_new", []), "_withData_", [data]);})])]);})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["error"]);})])])]);
+return self;}
+}),
+smalltalk.Issue);
+
+smalltalk.addMethod(
+unescape('_pullRequest'),
+smalltalk.method({
+selector: unescape('pullRequest'),
+fn: function (){
+var self=this;
+return self['@pullRequest'];
 return self;}
 }),
 smalltalk.Issue);
