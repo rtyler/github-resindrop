@@ -339,23 +339,24 @@ smalltalk.Issues);
 smalltalk.addClass('Repo', smalltalk.APIBase, ['token', 'authenticated'], 'GitHub');
 
 smalltalk.addMethod(
-unescape('_collaboratorsFor_'),
-smalltalk.method({
-selector: unescape('collaboratorsFor%3A'),
-fn: function (fullRepoName){
-var self=this;
-
-return self;}
-}),
-smalltalk.Repo.klass);
-
-smalltalk.addMethod(
 unescape('_collaboratorsFor_with_'),
 smalltalk.method({
 selector: unescape('collaboratorsFor%3Awith%3A'),
 fn: function (fullRepoName, aBlock){
 var self=this;
 smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/repos/")]), "__comma", [fullRepoName]), "__comma", [unescape("/collaborators")]), smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){return smalltalk.send(aBlock, "_value_", [smalltalk.send(result, "_data", [])]);})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [unescape("Error%20calling%20%23collaboratorsFor")]);})])])]);
+return true;
+return self;}
+}),
+smalltalk.Repo.klass);
+
+smalltalk.addMethod(
+unescape('_reposFor_with_'),
+smalltalk.method({
+selector: unescape('reposFor%3Awith%3A'),
+fn: function (aUsername, aBlock){
+var self=this;
+smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/users/")]), "__comma", [aUsername]), "__comma", [unescape("/repos")]), smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){smalltalk.send(aBlock, "_value_", [smalltalk.send(result, "_data", [])]);return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(result, "_meta", [])]);})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [unescape("Error%20calling%20%23reposFor")]);})])])]);
 return true;
 return self;}
 }),

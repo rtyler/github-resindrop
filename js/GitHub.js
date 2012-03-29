@@ -469,22 +469,6 @@ smalltalk.Issues);
 smalltalk.addClass('Repo', smalltalk.APIBase, ['token', 'authenticated'], 'GitHub');
 
 smalltalk.addMethod(
-unescape('_collaboratorsFor_'),
-smalltalk.method({
-selector: unescape('collaboratorsFor%3A'),
-category: 'api-calls',
-fn: function (fullRepoName){
-var self=this;
-
-return self;},
-args: ["fullRepoName"],
-source: unescape('collaboratorsFor%3A%20fullRepoName%0A%09%22A%20fullRepoName%20should%20be%20in%20the%20format%20of%20%27rtyler/Hubboard%27%20%28for%20example%29%22%0A%09'),
-messageSends: [],
-referencedClasses: []
-}),
-smalltalk.Repo.klass);
-
-smalltalk.addMethod(
 unescape('_collaboratorsFor_with_'),
 smalltalk.method({
 selector: unescape('collaboratorsFor%3Awith%3A'),
@@ -497,6 +481,23 @@ return self;},
 args: ["fullRepoName", "aBlock"],
 source: unescape('collaboratorsFor%3A%20fullRepoName%20with%3A%20aBlock%0A%09%22A%20fullRepoName%20should%20be%20in%20the%20format%20of%20%27rtyler/Hubboard%27%20%28for%20example%29%22%0A%09jQuery%20ajax%3A%20%28%28self%20baseUrl%29%2C%20%27/repos/%27%2C%20fullRepoName%2C%20%27/collaborators%27%29%20options%3A%20%23%7B%0A%09%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%09%27success%27%20-%3E%20%5B%20%3Aresult%20%7C%20aBlock%20value%3A%20%28result%20data%29%20%5D.%0A%09%09%09%27error%27%20-%3E%20%5B%20console%20log%3A%20%27Error%20calling%20%23collaboratorsFor%27%20%5D%0A%09%7D.%0A%09%5E%20true.%20'),
 messageSends: ["ajax:options:", unescape("%2C"), "baseUrl", unescape("-%3E"), "value:", "data", "log:"],
+referencedClasses: []
+}),
+smalltalk.Repo.klass);
+
+smalltalk.addMethod(
+unescape('_reposFor_with_'),
+smalltalk.method({
+selector: unescape('reposFor%3Awith%3A'),
+category: 'api-calls',
+fn: function (aUsername, aBlock){
+var self=this;
+smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/users/")]), "__comma", [aUsername]), "__comma", [unescape("/repos")]), smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){smalltalk.send(aBlock, "_value_", [smalltalk.send(result, "_data", [])]);return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(result, "_meta", [])]);})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [unescape("Error%20calling%20%23reposFor")]);})])])]);
+return true;
+return self;},
+args: ["aUsername", "aBlock"],
+source: unescape('reposFor%3A%20aUsername%20with%3A%20aBlock%0A%09jQuery%20ajax%3A%20%28%28self%20baseUrl%29%2C%20%27/users/%27%2C%20aUsername%2C%20%27/repos%27%29%20options%3A%20%23%7B%0A%09%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%09%27success%27%20-%3E%20%5B%20%3Aresult%20%7C%20aBlock%20value%3A%20%28result%20data%29.%20console%20log%3A%20%28result%20meta%29%20%5D.%0A%09%09%09%27error%27%20-%3E%20%5B%20console%20log%3A%20%27Error%20calling%20%23reposFor%27%20%5D%0A%09%7D.%0A%09%5E%20true.%20'),
+messageSends: ["ajax:options:", unescape("%2C"), "baseUrl", unescape("-%3E"), "value:", "data", "log:", "meta"],
 referencedClasses: []
 }),
 smalltalk.Repo.klass);

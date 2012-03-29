@@ -229,16 +229,21 @@ APIBase subclass: #Repo
 
 !Repo class methodsFor: 'api-calls'!
 
-collaboratorsFor: fullRepoName
-	"A fullRepoName should be in the format of 'rtyler/Hubboard' (for example)"
-!
-
 collaboratorsFor: fullRepoName with: aBlock
 	"A fullRepoName should be in the format of 'rtyler/Hubboard' (for example)"
 	jQuery ajax: ((self baseUrl), '/repos/', fullRepoName, '/collaborators') options: #{
 			'dataType' -> 'jsonp'.
 			'success' -> [ :result | aBlock value: (result data) ].
 			'error' -> [ console log: 'Error calling #collaboratorsFor' ]
+	}.
+	^ true.
+!
+
+reposFor: aUsername with: aBlock
+	jQuery ajax: ((self baseUrl), '/users/', aUsername, '/repos') options: #{
+			'dataType' -> 'jsonp'.
+			'success' -> [ :result | aBlock value: (result data). console log: (result meta) ].
+			'error' -> [ console log: 'Error calling #reposFor' ]
 	}.
 	^ true.
 ! !
