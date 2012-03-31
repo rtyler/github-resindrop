@@ -1,5 +1,5 @@
 smalltalk.addPackage('GitHub', {});
-smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
+smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -7,14 +7,32 @@ selector: unescape('withData%3A'),
 category: 'initializers',
 fn: function (aDict){
 var self=this;
-(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
+(self['@raw']=aDict);
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
+source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
 messageSends: ["at:"],
 referencedClasses: []
 }),
-smalltalk.User);
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@body'];
+return self;},
+args: [],
+source: unescape('body%0A%09%5E%20body.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.Comment);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -30,7 +48,7 @@ source: unescape('login%0A%09%5E%20login.'),
 messageSends: [],
 referencedClasses: []
 }),
-smalltalk.User);
+smalltalk.Comment);
 
 
 
@@ -122,7 +140,7 @@ referencedClasses: []
 smalltalk.APIBase.klass);
 
 
-smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -130,32 +148,14 @@ selector: unescape('withData%3A'),
 category: 'initializers',
 fn: function (aDict){
 var self=this;
-(self['@raw']=aDict);
-(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
-(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
+source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
 messageSends: ["at:"],
 referencedClasses: []
 }),
-smalltalk.Comment);
-
-smalltalk.addMethod(
-unescape('_body'),
-smalltalk.method({
-selector: unescape('body'),
-category: 'accessors',
-fn: function (){
-var self=this;
-return self['@body'];
-return self;},
-args: [],
-source: unescape('body%0A%09%5E%20body.'),
-messageSends: [],
-referencedClasses: []
-}),
-smalltalk.Comment);
+smalltalk.User);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -171,7 +171,7 @@ source: unescape('login%0A%09%5E%20login.'),
 messageSends: [],
 referencedClasses: []
 }),
-smalltalk.Comment);
+smalltalk.User);
 
 
 
@@ -486,35 +486,67 @@ referencedClasses: []
 smalltalk.Repo.klass);
 
 smalltalk.addMethod(
-unescape('_reposFor_with_'),
+unescape('_fetchReposFor_withEachDo_finally_'),
 smalltalk.method({
-selector: unescape('reposFor%3Awith%3A'),
+selector: unescape('fetchReposFor%3AwithEachDo%3Afinally%3A'),
 category: 'api-calls',
-fn: function (aUsername, aBlock){
+fn: function (aUser, aBlock, aFinalBlock){
 var self=this;
-smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_with_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/users/")]), "__comma", [aUsername]), "__comma", [unescape("/repos")]), aBlock]);
+smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/users/")]), "__comma", [aUser]), "__comma", [unescape("/repos")]), aBlock, aFinalBlock]);
 return self;},
-args: ["aUsername", "aBlock"],
-source: unescape('reposFor%3A%20aUsername%20with%3A%20aBlock%0A%09Repo%20fetchAllFromUrl%3A%20%28%28self%20baseUrl%29%2C%20%27/users/%27%2C%20aUsername%2C%20%27/repos%27%29%20with%3A%20aBlock.'),
-messageSends: ["fetchAllFromUrl:with:", unescape("%2C"), "baseUrl"],
+args: ["aUser", "aBlock", "aFinalBlock"],
+source: unescape('fetchReposFor%3A%20aUser%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock%0A%09Repo%20fetchAllFromUrl%3A%20%28%28self%20baseUrl%29%2C%20%27/users/%27%2C%20aUser%2C%20%27/repos%27%29%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock.'),
+messageSends: ["fetchAllFromUrl:withEachDo:finally:", unescape("%2C"), "baseUrl"],
 referencedClasses: ["Repo"]
 }),
 smalltalk.Repo.klass);
 
 smalltalk.addMethod(
-unescape('_fetchAllFromUrl_with_'),
+unescape('_fetchReposFor_withEachDo_'),
 smalltalk.method({
-selector: unescape('fetchAllFromUrl%3Awith%3A'),
+selector: unescape('fetchReposFor%3AwithEachDo%3A'),
+category: 'api-calls',
+fn: function (aUser, aBlock){
+var self=this;
+smalltalk.send((smalltalk.Repo || Repo), "_fetchReposFor_withEachDo_finally_", [aUser, aBlock, (function(){return nil;})]);
+return self;},
+args: ["aUser", "aBlock"],
+source: unescape('fetchReposFor%3A%20aUser%20withEachDo%3A%20aBlock%0A%09Repo%20fetchReposFor%3A%20aUser%20withEachDo%3A%20aBlock%20finally%3A%20%5B%5D.'),
+messageSends: ["fetchReposFor:withEachDo:finally:"],
+referencedClasses: ["Repo"]
+}),
+smalltalk.Repo.klass);
+
+smalltalk.addMethod(
+unescape('_fetchAllFromUrl_withEachDo_finally_'),
+smalltalk.method({
+selector: unescape('fetchAllFromUrl%3AwithEachDo%3Afinally%3A'),
+category: 'api-calls',
+fn: function (aUrlString, aBlock, aFinalBlock){
+var self=this;
+smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [aUrlString, smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){var links=nil;
+var foundNext=nil;
+smalltalk.send(smalltalk.send(result, "_data", []), "_do_", [(function(item){smalltalk.send(item, "_at_put_", ["updated_at", smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(item, "_at_", ["updated_at"])])]);return smalltalk.send(aBlock, "_value_", [item]);})]);(links=smalltalk.send(smalltalk.send(result, "_meta", []), "_at_", ["Link"]));(foundNext=false);smalltalk.send(links, "_do_", [(function(link){return ((($receiver = smalltalk.send(smalltalk.send(smalltalk.send(link, "_at_", [(2)]), "_at_", ["rel"]), "__eq", ["next"])).klass === smalltalk.Boolean) ? ($receiver ? (function(){(foundNext=true);return smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(link, "_at_", [(1)]), aBlock, aFinalBlock]);})() : nil) : smalltalk.send($receiver, "_ifTrue_", [(function(){(foundNext=true);return smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(link, "_at_", [(1)]), aBlock, aFinalBlock]);})]));})]);return ((($receiver = foundNext).klass === smalltalk.Boolean) ? (! $receiver ? (function(){return smalltalk.send(aFinalBlock, "_value", []);})() : nil) : smalltalk.send($receiver, "_ifFalse_", [(function(){return smalltalk.send(aFinalBlock, "_value", []);})]));})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(unescape("Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20"), "__comma", [aUrlString])]);})])])]);
+return self;},
+args: ["aUrlString", "aBlock", "aFinalBlock"],
+source: unescape('fetchAllFromUrl%3A%20aUrlString%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock%0A%09%22%20Fetch%20the%20GitHub%20data%20from%20aUrlString%20and%20call%20aBlock%20with%20the%20results%20%22%0A%0A%09jQuery%20ajax%3A%20aUrlString%20options%3A%20%23%7B%0A%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%27success%27%20-%3E%20%5B%20%3Aresult%20%7C%0A%09%09%09%7C%20links%20foundNext%20%7C%0A%09%09%09result%20data%20do%3A%20%5B%20%3Aitem%20%7C%0A%09%09%09%09item%20at%3A%20%27updated_at%27%20put%3A%20%28Date%20fromString%3A%20%28item%20at%3A%20%27updated_at%27%29%29.%0A%09%09%09%09aBlock%20value%3A%20item%20%5D.%0A%09%0A%09%09%09links%20%3A%3D%20result%20meta%20at%3A%20%27Link%27.%0A%09%09%09foundNext%20%3A%3D%20false.%0A%09%09%09links%20do%3A%20%5B%20%3Alink%20%7C%0A%09%09%09%09%28%28link%20at%3A%202%29%20at%3A%20%27rel%27%29%20%3D%20%27next%27%0A%09%09%09%09%09ifTrue%3A%20%5B%0A%09%09%09%09%09%09foundNext%20%3A%3D%20true.%0A%09%09%09%09%09%09Repo%20fetchAllFromUrl%3A%20%28link%20at%3A%201%29%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock.%0A%09%09%09%5D%5D.%0A%09%09%09foundNext%20ifFalse%3A%20%5B%20aFinalBlock%20value.%20%5D.%0A%09%09%5D.%0A%09%09%27error%27%20-%3E%20%5B%20console%20log%3A%20%28%27Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20%27%2C%20aUrlString%29%20%5D%0A%09%7D.'),
+messageSends: ["ajax:options:", unescape("-%3E"), "do:", "data", "at:put:", "fromString:", "at:", "value:", "meta", "ifTrue:", unescape("%3D"), "fetchAllFromUrl:withEachDo:finally:", "ifFalse:", "value", "log:", unescape("%2C")],
+referencedClasses: ["Date", "Repo"]
+}),
+smalltalk.Repo.klass);
+
+smalltalk.addMethod(
+unescape('_fetchAllFromUrl_withEachDo_'),
+smalltalk.method({
+selector: unescape('fetchAllFromUrl%3AwithEachDo%3A'),
 category: 'api-calls',
 fn: function (aUrlString, aBlock){
 var self=this;
-smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [aUrlString, smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){(($receiver = smalltalk.send(result, "_meta", [])) != nil && $receiver != undefined) ? (function(){var nextUrl=nil;
-var link=nil;
-(link=smalltalk.send(smalltalk.send(smalltalk.send(result, "_meta", []), "_at_", ["Link"]), "_at_", [(1)]));return ((($receiver = smalltalk.send(smalltalk.send(smalltalk.send(link, "_at_", [(2)]), "_at_", ["rel"]), "__eq", ["next"])).klass === smalltalk.Boolean) ? ($receiver ? (function(){(nextUrl=smalltalk.send(link, "_at_", [(1)]));return smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_with_", [nextUrl, aBlock]);})() : nil) : smalltalk.send($receiver, "_ifTrue_", [(function(){(nextUrl=smalltalk.send(link, "_at_", [(1)]));return smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_with_", [nextUrl, aBlock]);})]));})() : nil;return smalltalk.send(aBlock, "_value_", [smalltalk.send(result, "_data", [])]);})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(unescape("Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20"), "__comma", [aUrlString])]);})])])]);
+smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_withEachDo_finally_", [aUrlString, aBlock, (function(){return nil;})]);
 return self;},
 args: ["aUrlString", "aBlock"],
-source: unescape('fetchAllFromUrl%3A%20aUrlString%20with%3A%20aBlock%0A%09%22%20Fetch%20the%20GitHub%20data%20from%20aUrlString%20and%20call%20aBlock%20with%20the%20results%20%22%0A%0A%09%22%20We%20should%20be%20safe%20to%20assume%20that%20%60result%20meta%60%20is%20an%20Array%20of%20two%20elements%20if%20we%20should%20paginate%22%0A%09%22%20The%20first%20element%20should%20be%20%27next%27%20and%20the%20second%20should%20be%20last%22%0A%09jQuery%20ajax%3A%20aUrlString%20options%3A%20%23%7B%0A%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%27success%27%20-%3E%20%5B%20%3Aresult%20%7C%0A%09%09%09result%20meta%20ifNotNil%3A%20%5B%0A%09%09%09%09%7C%20nextUrl%20link%20%7C%0A%09%09%09%09link%20%3A%3D%20%28result%20meta%20at%3A%20%27Link%27%29%20at%3A%201.%0A%09%09%09%09%28%28link%20at%3A%202%29%20at%3A%20%27rel%27%29%20%3D%20%27next%27%20ifTrue%3A%20%5B%0A%09%09%09%09%09nextUrl%20%3A%3D%20link%20at%3A%201.%0A%09%09%09%09%09Repo%20fetchAllFromUrl%3A%20nextUrl%20with%3A%20aBlock.%0A%09%09%09%09%5D.%0A%09%09%09%5D.%0A%09%09%09aBlock%20value%3A%20%28result%20data%29.%0A%09%09%5D.%0A%09%09%27error%27%20-%3E%20%5B%20console%20log%3A%20%28%27Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20%27%2C%20aUrlString%29%20%5D%0A%09%7D.'),
-messageSends: ["ajax:options:", unescape("-%3E"), "ifNotNil:", "meta", "at:", "ifTrue:", unescape("%3D"), "fetchAllFromUrl:with:", "value:", "data", "log:", unescape("%2C")],
+source: unescape('fetchAllFromUrl%3A%20aUrlString%20withEachDo%3A%20aBlock%0A%09Repo%20fetchAllFromUrl%3A%20aUrlString%20withEachDo%3A%20aBlock%20finally%3A%20%5B%5D.'),
+messageSends: ["fetchAllFromUrl:withEachDo:finally:"],
 referencedClasses: ["Repo"]
 }),
 smalltalk.Repo.klass);

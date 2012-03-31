@@ -1,19 +1,24 @@
 Smalltalk current createPackage: 'GitHub' properties: #{}!
-Object subclass: #User
-	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
+Object subclass: #Comment
+	instanceVariableNames: 'raw login body created_at'
 	category: 'GitHub'!
 
-!User methodsFor: 'accessors'!
+!Comment methodsFor: 'accessors'!
+
+body
+	^ body.
+!
 
 login
 	^ login.
 ! !
 
-!User methodsFor: 'initializers'!
+!Comment methodsFor: 'initializers'!
 
 withData: aDict
-	" Seed the User object with data acquired from the API"
-	login := aDict at: 'login'.
+	raw := aDict.
+	body := aDict at: 'body'.
+	login := (aDict at: 'user') at: 'login'.
 ! !
 
 Object subclass: #APIBase
@@ -53,26 +58,21 @@ baseUrl
 	^ 'https://api.github.com'.
 ! !
 
-Object subclass: #Comment
-	instanceVariableNames: 'raw login body created_at'
+Object subclass: #User
+	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
 	category: 'GitHub'!
 
-!Comment methodsFor: 'accessors'!
-
-body
-	^ body.
-!
+!User methodsFor: 'accessors'!
 
 login
 	^ login.
 ! !
 
-!Comment methodsFor: 'initializers'!
+!User methodsFor: 'initializers'!
 
 withData: aDict
-	raw := aDict.
-	body := aDict at: 'body'.
-	login := (aDict at: 'user') at: 'login'.
+	" Seed the User object with data acquired from the API"
+	login := aDict at: 'login'.
 ! !
 
 APIBase subclass: #Issue
@@ -239,29 +239,40 @@ collaboratorsFor: fullRepoName with: aBlock
 	^ true.
 !
 
-reposFor: aUsername with: aBlock
-	Repo fetchAllFromUrl: ((self baseUrl), '/users/', aUsername, '/repos') with: aBlock.
+fetchReposFor: aUser withEachDo: aBlock finally: aFinalBlock
+	Repo fetchAllFromUrl: ((self baseUrl), '/users/', aUser, '/repos') withEachDo: aBlock finally: aFinalBlock.
 !
 
-fetchAllFromUrl: aUrlString with: aBlock
+fetchReposFor: aUser withEachDo: aBlock
+	Repo fetchReposFor: aUser withEachDo: aBlock finally: [].
+!
+
+fetchAllFromUrl: aUrlString withEachDo: aBlock finally: aFinalBlock
 	" Fetch the GitHub data from aUrlString and call aBlock with the results "
 
-	" We should be safe to assume that `result meta` is an Array of two elements if we should paginate"
-	" The first element should be 'next' and the second should be last"
 	jQuery ajax: aUrlString options: #{
 		'dataType' -> 'jsonp'.
 		'success' -> [ :result |
-			result meta ifNotNil: [
-				| nextUrl link |
-				link := (result meta at: 'Link') at: 1.
-				((link at: 2) at: 'rel') = 'next' ifTrue: [
-					nextUrl := link at: 1.
-					Repo fetchAllFromUrl: nextUrl with: aBlock.
-				].
-			].
-			aBlock value: (result data).
+			| links foundNext |
+			result data do: [ :item |
+				item at: 'updated_at' put: (Date fromString: (item at: 'updated_at')).
+				aBlock value: item ].
+	
+			links := result meta at: 'Link'.
+			foundNext := false.
+			links do: [ :link |
+				((link at: 2) at: 'rel') = 'next'
+					ifTrue: [
+						foundNext := true.
+						Repo fetchAllFromUrl: (link at: 1) withEachDo: aBlock finally: aFinalBlock.
+			]].
+			foundNext ifFalse: [ aFinalBlock value. ].
 		].
 		'error' -> [ console log: ('Error calling #fetchAllFromUrl with the URL: ', aUrlString) ]
 	}.
+!
+
+fetchAllFromUrl: aUrlString withEachDo: aBlock
+	Repo fetchAllFromUrl: aUrlString withEachDo: aBlock finally: [].
 ! !
 
