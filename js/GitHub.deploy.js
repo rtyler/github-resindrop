@@ -396,4 +396,15 @@ return self;}
 }),
 smalltalk.Repo.klass);
 
+smalltalk.addMethod(
+unescape('_fetchReposForToken_withEachDo_finally_'),
+smalltalk.method({
+selector: unescape('fetchReposForToken%3AwithEachDo%3Afinally%3A'),
+fn: function (aToken, aBlock, aFinalBlock){
+var self=this;
+smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/user/repos%3Faccess_token%3D")]), "__comma", [aToken]), aBlock, aFinalBlock]);
+return self;}
+}),
+smalltalk.Repo.klass);
+
 

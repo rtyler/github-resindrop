@@ -249,7 +249,6 @@ fetchReposFor: aUser withEachDo: aBlock
 
 fetchAllFromUrl: aUrlString withEachDo: aBlock finally: aFinalBlock
 	" Fetch the GitHub data from aUrlString and call aBlock with the results "
-
 	jQuery ajax: aUrlString options: #{
 		'dataType' -> 'jsonp'.
 		'success' -> [ :result |
@@ -274,5 +273,9 @@ fetchAllFromUrl: aUrlString withEachDo: aBlock finally: aFinalBlock
 
 fetchAllFromUrl: aUrlString withEachDo: aBlock
 	Repo fetchAllFromUrl: aUrlString withEachDo: aBlock finally: [].
+!
+
+fetchReposForToken: aToken withEachDo: aBlock finally: aFinalBlock
+	Repo fetchAllFromUrl: ((self baseUrl), '/user/repos?access_token=', aToken) withEachDo: aBlock finally: aFinalBlock.
 ! !
 
