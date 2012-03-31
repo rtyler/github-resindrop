@@ -1,24 +1,19 @@
 Smalltalk current createPackage: 'GitHub' properties: #{}!
-Object subclass: #Comment
-	instanceVariableNames: 'raw login body created_at'
+Object subclass: #User
+	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
 	category: 'GitHub'!
 
-!Comment methodsFor: 'accessors'!
-
-body
-	^ body.
-!
+!User methodsFor: 'accessors'!
 
 login
 	^ login.
 ! !
 
-!Comment methodsFor: 'initializers'!
+!User methodsFor: 'initializers'!
 
 withData: aDict
-	raw := aDict.
-	body := aDict at: 'body'.
-	login := (aDict at: 'user') at: 'login'.
+	" Seed the User object with data acquired from the API"
+	login := aDict at: 'login'.
 ! !
 
 Object subclass: #APIBase
@@ -58,21 +53,26 @@ baseUrl
 	^ 'https://api.github.com'.
 ! !
 
-Object subclass: #User
-	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
+Object subclass: #Comment
+	instanceVariableNames: 'raw login body created_at'
 	category: 'GitHub'!
 
-!User methodsFor: 'accessors'!
+!Comment methodsFor: 'accessors'!
+
+body
+	^ body.
+!
 
 login
 	^ login.
 ! !
 
-!User methodsFor: 'initializers'!
+!Comment methodsFor: 'initializers'!
 
 withData: aDict
-	" Seed the User object with data acquired from the API"
-	login := aDict at: 'login'.
+	raw := aDict.
+	body := aDict at: 'body'.
+	login := (aDict at: 'user') at: 'login'.
 ! !
 
 APIBase subclass: #Issue
@@ -240,11 +240,28 @@ collaboratorsFor: fullRepoName with: aBlock
 !
 
 reposFor: aUsername with: aBlock
-	jQuery ajax: ((self baseUrl), '/users/', aUsername, '/repos') options: #{
-			'dataType' -> 'jsonp'.
-			'success' -> [ :result | aBlock value: (result data). console log: (result meta) ].
-			'error' -> [ console log: 'Error calling #reposFor' ]
+	Repo fetchAllFromUrl: ((self baseUrl), '/users/', aUsername, '/repos') with: aBlock.
+!
+
+fetchAllFromUrl: aUrlString with: aBlock
+	" Fetch the GitHub data from aUrlString and call aBlock with the results "
+
+	" We should be safe to assume that `result meta` is an Array of two elements if we should paginate"
+	" The first element should be 'next' and the second should be last"
+	jQuery ajax: aUrlString options: #{
+		'dataType' -> 'jsonp'.
+		'success' -> [ :result |
+			result meta ifNotNil: [
+				| nextUrl link |
+				link := (result meta at: 'Link') at: 1.
+				((link at: 2) at: 'rel') = 'next' ifTrue: [
+					nextUrl := link at: 1.
+					Repo fetchAllFromUrl: nextUrl with: aBlock.
+				].
+			].
+			aBlock value: (result data).
+		].
+		'error' -> [ console log: ('Error calling #fetchAllFromUrl with the URL: ', aUrlString) ]
 	}.
-	^ true.
 ! !
 
