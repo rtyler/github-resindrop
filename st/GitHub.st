@@ -1,24 +1,19 @@
 Smalltalk current createPackage: 'GitHub' properties: #{}!
-Object subclass: #Comment
-	instanceVariableNames: 'raw login body created_at'
+Object subclass: #User
+	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
 	category: 'GitHub'!
 
-!Comment methodsFor: 'accessors'!
-
-body
-	^ body.
-!
+!User methodsFor: 'accessors'!
 
 login
 	^ login.
 ! !
 
-!Comment methodsFor: 'initializers'!
+!User methodsFor: 'initializers'!
 
 withData: aDict
-	raw := aDict.
-	body := aDict at: 'body'.
-	login := (aDict at: 'user') at: 'login'.
+	" Seed the User object with data acquired from the API"
+	login := aDict at: 'login'.
 ! !
 
 Object subclass: #APIBase
@@ -56,23 +51,59 @@ apiUrlFor: apiString
 baseUrl
 	"Return the GitHub API url base"
 	^ 'https://api.github.com'.
+!
+
+fetchAllFromUrl: aUrlString withEachDo: aBlock finally: aFinalBlock
+	" Fetch the GitHub data from aUrlString and call aBlock with the results "
+	jQuery ajax: aUrlString options: #{
+		'dataType' -> 'jsonp'.
+		'success' -> [ :result |
+			| links foundNext |
+			" This special-case handling for the updated_at member will allow us to generally sort
+			   the result set by updated date, which we will need to do often"
+			result data do: [ :item |
+				item at: 'updated_at' put: (Date fromString: (item at: 'updated_at')).
+				aBlock value: item ].
+	
+			links := result meta at: 'Link'.
+			foundNext := false.
+			links ifNotNil: [
+				links do: [ :link |
+					((link at: 2) at: 'rel') = 'next'
+						ifTrue: [
+							foundNext := true.
+							self fetchAllFromUrl: (link at: 1) withEachDo: aBlock finally: aFinalBlock.
+			]]].
+			foundNext ifFalse: [ aFinalBlock value. ].
+		].
+		'error' -> [ console log: ('Error calling #fetchAllFromUrl with the URL: ', aUrlString) ]
+	}.
+!
+
+fetchAllFromUrl: aUrlString withEachDo: aBlock
+	self fetchAllFromUrl: aUrlString withEachDo: aBlock finally: [].
 ! !
 
-Object subclass: #User
-	instanceVariableNames: 'raw fullName login imageUrl userId bio email profileUrl'
+Object subclass: #Comment
+	instanceVariableNames: 'raw login body created_at'
 	category: 'GitHub'!
 
-!User methodsFor: 'accessors'!
+!Comment methodsFor: 'accessors'!
+
+body
+	^ body.
+!
 
 login
 	^ login.
 ! !
 
-!User methodsFor: 'initializers'!
+!Comment methodsFor: 'initializers'!
 
 withData: aDict
-	" Seed the User object with data acquired from the API"
-	login := aDict at: 'login'.
+	raw := aDict.
+	body := aDict at: 'body'.
+	login := (aDict at: 'user') at: 'login'.
 ! !
 
 APIBase subclass: #Issue
@@ -223,6 +254,18 @@ recentlyClosed: aPageCallback loadAll: shouldLoadAll
 	^ true.
 ! !
 
+!Issues class methodsFor: 'not yet classified'!
+
+fetchIssuesFor: aProjectName withEachDo: aBlock finally: aFinalBlock
+	"Fetch all the issues for the project name (e.g. 'rtyler/Hubboard') and invoke aBlock
+	 for every issue. aFinalBlock will be invoked after all issues have been downloaded"
+	self fetchAllFromUrl: ((self baseUrl), '/repos/', aProjectName, '/issues') withEachDo: aBlock finally: aFinalBlock.
+!
+
+fetchIssuesFor: aProjectName withEachDo: aBlock
+	self fetchIssuesFor: aProjectName withEachDo: aBlock finally: [].
+! !
+
 APIBase subclass: #Repo
 	instanceVariableNames: 'token authenticated'
 	category: 'GitHub'!
@@ -240,42 +283,14 @@ collaboratorsFor: fullRepoName with: aBlock
 !
 
 fetchReposFor: aUser withEachDo: aBlock finally: aFinalBlock
-	Repo fetchAllFromUrl: ((self baseUrl), '/users/', aUser, '/repos') withEachDo: aBlock finally: aFinalBlock.
+	self fetchAllFromUrl: ((self baseUrl), '/users/', aUser, '/repos') withEachDo: aBlock finally: aFinalBlock.
 !
 
 fetchReposFor: aUser withEachDo: aBlock
-	Repo fetchReposFor: aUser withEachDo: aBlock finally: [].
-!
-
-fetchAllFromUrl: aUrlString withEachDo: aBlock finally: aFinalBlock
-	" Fetch the GitHub data from aUrlString and call aBlock with the results "
-	jQuery ajax: aUrlString options: #{
-		'dataType' -> 'jsonp'.
-		'success' -> [ :result |
-			| links foundNext |
-			result data do: [ :item |
-				item at: 'updated_at' put: (Date fromString: (item at: 'updated_at')).
-				aBlock value: item ].
-	
-			links := result meta at: 'Link'.
-			foundNext := false.
-			links do: [ :link |
-				((link at: 2) at: 'rel') = 'next'
-					ifTrue: [
-						foundNext := true.
-						Repo fetchAllFromUrl: (link at: 1) withEachDo: aBlock finally: aFinalBlock.
-			]].
-			foundNext ifFalse: [ aFinalBlock value. ].
-		].
-		'error' -> [ console log: ('Error calling #fetchAllFromUrl with the URL: ', aUrlString) ]
-	}.
-!
-
-fetchAllFromUrl: aUrlString withEachDo: aBlock
-	Repo fetchAllFromUrl: aUrlString withEachDo: aBlock finally: [].
+	self fetchReposFor: aUser withEachDo: aBlock finally: [].
 !
 
 fetchReposForToken: aToken withEachDo: aBlock finally: aFinalBlock
-	Repo fetchAllFromUrl: ((self baseUrl), '/user/repos?access_token=', aToken) withEachDo: aBlock finally: aFinalBlock.
+	self fetchAllFromUrl: ((self baseUrl), '/user/repos?access_token=', aToken) withEachDo: aBlock finally: aFinalBlock.
 ! !
 

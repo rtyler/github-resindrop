@@ -1,28 +1,15 @@
 smalltalk.addPackage('GitHub', {});
-smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
 selector: unescape('withData%3A'),
 fn: function (aDict){
 var self=this;
-(self['@raw']=aDict);
-(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
-(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
 return self;}
 }),
-smalltalk.Comment);
-
-smalltalk.addMethod(
-unescape('_body'),
-smalltalk.method({
-selector: unescape('body'),
-fn: function (){
-var self=this;
-return self['@body'];
-return self;}
-}),
-smalltalk.Comment);
+smalltalk.User);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -33,7 +20,7 @@ var self=this;
 return self['@login'];
 return self;}
 }),
-smalltalk.Comment);
+smalltalk.User);
 
 
 
@@ -99,18 +86,55 @@ return self;}
 }),
 smalltalk.APIBase.klass);
 
+smalltalk.addMethod(
+unescape('_fetchAllFromUrl_withEachDo_finally_'),
+smalltalk.method({
+selector: unescape('fetchAllFromUrl%3AwithEachDo%3Afinally%3A'),
+fn: function (aUrlString, aBlock, aFinalBlock){
+var self=this;
+smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [aUrlString, smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){var links=nil;
+var foundNext=nil;
+smalltalk.send(smalltalk.send(result, "_data", []), "_do_", [(function(item){smalltalk.send(item, "_at_put_", ["updated_at", smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(item, "_at_", ["updated_at"])])]);return smalltalk.send(aBlock, "_value_", [item]);})]);(links=smalltalk.send(smalltalk.send(result, "_meta", []), "_at_", ["Link"]));(foundNext=false);(($receiver = links) != nil && $receiver != undefined) ? (function(){return smalltalk.send(links, "_do_", [(function(link){return ((($receiver = smalltalk.send(smalltalk.send(smalltalk.send(link, "_at_", [(2)]), "_at_", ["rel"]), "__eq", ["next"])).klass === smalltalk.Boolean) ? ($receiver ? (function(){(foundNext=true);return smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(link, "_at_", [(1)]), aBlock, aFinalBlock]);})() : nil) : smalltalk.send($receiver, "_ifTrue_", [(function(){(foundNext=true);return smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(link, "_at_", [(1)]), aBlock, aFinalBlock]);})]));})]);})() : nil;return ((($receiver = foundNext).klass === smalltalk.Boolean) ? (! $receiver ? (function(){return smalltalk.send(aFinalBlock, "_value", []);})() : nil) : smalltalk.send($receiver, "_ifFalse_", [(function(){return smalltalk.send(aFinalBlock, "_value", []);})]));})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(unescape("Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20"), "__comma", [aUrlString])]);})])])]);
+return self;}
+}),
+smalltalk.APIBase.klass);
 
-smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
+smalltalk.addMethod(
+unescape('_fetchAllFromUrl_withEachDo_'),
+smalltalk.method({
+selector: unescape('fetchAllFromUrl%3AwithEachDo%3A'),
+fn: function (aUrlString, aBlock){
+var self=this;
+smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [aUrlString, aBlock, (function(){return nil;})]);
+return self;}
+}),
+smalltalk.APIBase.klass);
+
+
+smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
 selector: unescape('withData%3A'),
 fn: function (aDict){
 var self=this;
-(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
+(self['@raw']=aDict);
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
 return self;}
 }),
-smalltalk.User);
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+fn: function (){
+var self=this;
+return self['@body'];
+return self;}
+}),
+smalltalk.Comment);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -121,7 +145,7 @@ var self=this;
 return self['@login'];
 return self;}
 }),
-smalltalk.User);
+smalltalk.Comment);
 
 
 
@@ -335,6 +359,28 @@ return self;
 smalltalk.Issues);
 
 
+smalltalk.addMethod(
+unescape('_fetchIssuesFor_withEachDo_finally_'),
+smalltalk.method({
+selector: unescape('fetchIssuesFor%3AwithEachDo%3Afinally%3A'),
+fn: function (aProjectName, aBlock, aFinalBlock){
+var self=this;
+smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/repos/")]), "__comma", [aProjectName]), "__comma", [unescape("/issues")]), aBlock, aFinalBlock]);
+return self;}
+}),
+smalltalk.Issues.klass);
+
+smalltalk.addMethod(
+unescape('_fetchIssuesFor_withEachDo_'),
+smalltalk.method({
+selector: unescape('fetchIssuesFor%3AwithEachDo%3A'),
+fn: function (aProjectName, aBlock){
+var self=this;
+smalltalk.send(self, "_fetchIssuesFor_withEachDo_finally_", [aProjectName, aBlock, (function(){return nil;})]);
+return self;}
+}),
+smalltalk.Issues.klass);
+
 
 smalltalk.addClass('Repo', smalltalk.APIBase, ['token', 'authenticated'], 'GitHub');
 
@@ -356,7 +402,7 @@ smalltalk.method({
 selector: unescape('fetchReposFor%3AwithEachDo%3Afinally%3A'),
 fn: function (aUser, aBlock, aFinalBlock){
 var self=this;
-smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/users/")]), "__comma", [aUser]), "__comma", [unescape("/repos")]), aBlock, aFinalBlock]);
+smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/users/")]), "__comma", [aUser]), "__comma", [unescape("/repos")]), aBlock, aFinalBlock]);
 return self;}
 }),
 smalltalk.Repo.klass);
@@ -367,31 +413,7 @@ smalltalk.method({
 selector: unescape('fetchReposFor%3AwithEachDo%3A'),
 fn: function (aUser, aBlock){
 var self=this;
-smalltalk.send((smalltalk.Repo || Repo), "_fetchReposFor_withEachDo_finally_", [aUser, aBlock, (function(){return nil;})]);
-return self;}
-}),
-smalltalk.Repo.klass);
-
-smalltalk.addMethod(
-unescape('_fetchAllFromUrl_withEachDo_finally_'),
-smalltalk.method({
-selector: unescape('fetchAllFromUrl%3AwithEachDo%3Afinally%3A'),
-fn: function (aUrlString, aBlock, aFinalBlock){
-var self=this;
-smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [aUrlString, smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){var links=nil;
-var foundNext=nil;
-smalltalk.send(smalltalk.send(result, "_data", []), "_do_", [(function(item){smalltalk.send(item, "_at_put_", ["updated_at", smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(item, "_at_", ["updated_at"])])]);return smalltalk.send(aBlock, "_value_", [item]);})]);(links=smalltalk.send(smalltalk.send(result, "_meta", []), "_at_", ["Link"]));(foundNext=false);smalltalk.send(links, "_do_", [(function(link){return ((($receiver = smalltalk.send(smalltalk.send(smalltalk.send(link, "_at_", [(2)]), "_at_", ["rel"]), "__eq", ["next"])).klass === smalltalk.Boolean) ? ($receiver ? (function(){(foundNext=true);return smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(link, "_at_", [(1)]), aBlock, aFinalBlock]);})() : nil) : smalltalk.send($receiver, "_ifTrue_", [(function(){(foundNext=true);return smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(link, "_at_", [(1)]), aBlock, aFinalBlock]);})]));})]);return ((($receiver = foundNext).klass === smalltalk.Boolean) ? (! $receiver ? (function(){return smalltalk.send(aFinalBlock, "_value", []);})() : nil) : smalltalk.send($receiver, "_ifFalse_", [(function(){return smalltalk.send(aFinalBlock, "_value", []);})]));})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(unescape("Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20"), "__comma", [aUrlString])]);})])])]);
-return self;}
-}),
-smalltalk.Repo.klass);
-
-smalltalk.addMethod(
-unescape('_fetchAllFromUrl_withEachDo_'),
-smalltalk.method({
-selector: unescape('fetchAllFromUrl%3AwithEachDo%3A'),
-fn: function (aUrlString, aBlock){
-var self=this;
-smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_withEachDo_finally_", [aUrlString, aBlock, (function(){return nil;})]);
+smalltalk.send(self, "_fetchReposFor_withEachDo_finally_", [aUser, aBlock, (function(){return nil;})]);
 return self;}
 }),
 smalltalk.Repo.klass);
@@ -402,7 +424,7 @@ smalltalk.method({
 selector: unescape('fetchReposForToken%3AwithEachDo%3Afinally%3A'),
 fn: function (aToken, aBlock, aFinalBlock){
 var self=this;
-smalltalk.send((smalltalk.Repo || Repo), "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/user/repos%3Faccess_token%3D")]), "__comma", [aToken]), aBlock, aFinalBlock]);
+smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/user/repos%3Faccess_token%3D")]), "__comma", [aToken]), aBlock, aFinalBlock]);
 return self;}
 }),
 smalltalk.Repo.klass);
