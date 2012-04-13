@@ -295,7 +295,7 @@ fetchReposForToken: aToken withEachDo: aBlock finally: aFinalBlock
 ! !
 
 APIBase subclass: #PullRequest
-	instanceVariableNames: 'title number raw url createdAt updatedAt mergeable'
+	instanceVariableNames: 'title number raw url createdAt updatedAt mergeable comments commits changedFiles'
 	category: 'GitHub'!
 
 !PullRequest methodsFor: 'accessors'!
@@ -339,11 +339,14 @@ fromJSON: jsonString
 
 withData: data
 	title := data at: 'title'.
-	url := data at: 'url'.
+	url := data at: 'html_url'.
 	createdAt := Date fromString: (data at: 'created_at').
 	updatedAt := Date fromString: (data at: 'updated_at').
 	number := data at: 'number'.
 	mergeable := data at: 'mergeable'.
+	comments := data at: 'comments'.
+	commits := data at: 'commits'.
+	changedFiles := data at: 'changed_files'.
 	raw := data.
 ! !
 

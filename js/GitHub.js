@@ -600,7 +600,7 @@ referencedClasses: []
 smalltalk.Repo.klass);
 
 
-smalltalk.addClass('PullRequest', smalltalk.APIBase, ['title', 'number', 'raw', 'url', 'createdAt', 'updatedAt', 'mergeable'], 'GitHub');
+smalltalk.addClass('PullRequest', smalltalk.APIBase, ['title', 'number', 'raw', 'url', 'createdAt', 'updatedAt', 'mergeable', 'comments', 'commits', 'changedFiles'], 'GitHub');
 smalltalk.addMethod(
 unescape('_initialize'),
 smalltalk.method({
@@ -708,15 +708,18 @@ category: 'initializers',
 fn: function (data){
 var self=this;
 (self['@title']=smalltalk.send(data, "_at_", ["title"]));
-(self['@url']=smalltalk.send(data, "_at_", ["url"]));
+(self['@url']=smalltalk.send(data, "_at_", ["html_url"]));
 (self['@createdAt']=smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(data, "_at_", ["created_at"])]));
 (self['@updatedAt']=smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(data, "_at_", ["updated_at"])]));
 (self['@number']=smalltalk.send(data, "_at_", ["number"]));
 (self['@mergeable']=smalltalk.send(data, "_at_", ["mergeable"]));
+(self['@comments']=smalltalk.send(data, "_at_", ["comments"]));
+(self['@commits']=smalltalk.send(data, "_at_", ["commits"]));
+(self['@changedFiles']=smalltalk.send(data, "_at_", ["changed_files"]));
 (self['@raw']=data);
 return self;},
 args: ["data"],
-source: unescape('withData%3A%20data%0A%09title%20%3A%3D%20data%20at%3A%20%27title%27.%0A%09url%20%3A%3D%20data%20at%3A%20%27url%27.%0A%09createdAt%20%3A%3D%20Date%20fromString%3A%20%28data%20at%3A%20%27created_at%27%29.%0A%09updatedAt%20%3A%3D%20Date%20fromString%3A%20%28data%20at%3A%20%27updated_at%27%29.%0A%09number%20%3A%3D%20data%20at%3A%20%27number%27.%0A%09mergeable%20%3A%3D%20data%20at%3A%20%27mergeable%27.%0A%09raw%20%3A%3D%20data.'),
+source: unescape('withData%3A%20data%0A%09title%20%3A%3D%20data%20at%3A%20%27title%27.%0A%09url%20%3A%3D%20data%20at%3A%20%27html_url%27.%0A%09createdAt%20%3A%3D%20Date%20fromString%3A%20%28data%20at%3A%20%27created_at%27%29.%0A%09updatedAt%20%3A%3D%20Date%20fromString%3A%20%28data%20at%3A%20%27updated_at%27%29.%0A%09number%20%3A%3D%20data%20at%3A%20%27number%27.%0A%09mergeable%20%3A%3D%20data%20at%3A%20%27mergeable%27.%0A%09comments%20%3A%3D%20data%20at%3A%20%27comments%27.%0A%09commits%20%3A%3D%20data%20at%3A%20%27commits%27.%0A%09changedFiles%20%3A%3D%20data%20at%3A%20%27changed_files%27.%0A%09raw%20%3A%3D%20data.'),
 messageSends: ["at:", "fromString:"],
 referencedClasses: ["Date"]
 }),

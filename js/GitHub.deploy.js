@@ -430,7 +430,7 @@ return self;}
 smalltalk.Repo.klass);
 
 
-smalltalk.addClass('PullRequest', smalltalk.APIBase, ['title', 'number', 'raw', 'url', 'createdAt', 'updatedAt', 'mergeable'], 'GitHub');
+smalltalk.addClass('PullRequest', smalltalk.APIBase, ['title', 'number', 'raw', 'url', 'createdAt', 'updatedAt', 'mergeable', 'comments', 'commits', 'changedFiles'], 'GitHub');
 smalltalk.addMethod(
 unescape('_initialize'),
 smalltalk.method({
@@ -507,11 +507,14 @@ selector: unescape('withData%3A'),
 fn: function (data){
 var self=this;
 (self['@title']=smalltalk.send(data, "_at_", ["title"]));
-(self['@url']=smalltalk.send(data, "_at_", ["url"]));
+(self['@url']=smalltalk.send(data, "_at_", ["html_url"]));
 (self['@createdAt']=smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(data, "_at_", ["created_at"])]));
 (self['@updatedAt']=smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(data, "_at_", ["updated_at"])]));
 (self['@number']=smalltalk.send(data, "_at_", ["number"]));
 (self['@mergeable']=smalltalk.send(data, "_at_", ["mergeable"]));
+(self['@comments']=smalltalk.send(data, "_at_", ["comments"]));
+(self['@commits']=smalltalk.send(data, "_at_", ["commits"]));
+(self['@changedFiles']=smalltalk.send(data, "_at_", ["changed_files"]));
 (self['@raw']=data);
 return self;}
 }),
