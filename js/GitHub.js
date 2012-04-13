@@ -1,5 +1,5 @@
 smalltalk.addPackage('GitHub', {});
-smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -7,32 +7,14 @@ selector: unescape('withData%3A'),
 category: 'initializers',
 fn: function (aDict){
 var self=this;
-(self['@raw']=aDict);
-(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
-(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
+source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
 messageSends: ["at:"],
 referencedClasses: []
 }),
-smalltalk.Comment);
-
-smalltalk.addMethod(
-unescape('_body'),
-smalltalk.method({
-selector: unescape('body'),
-category: 'accessors',
-fn: function (){
-var self=this;
-return self['@body'];
-return self;},
-args: [],
-source: unescape('body%0A%09%5E%20body.'),
-messageSends: [],
-referencedClasses: []
-}),
-smalltalk.Comment);
+smalltalk.User);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -48,7 +30,7 @@ source: unescape('login%0A%09%5E%20login.'),
 messageSends: [],
 referencedClasses: []
 }),
-smalltalk.Comment);
+smalltalk.User);
 
 
 
@@ -174,7 +156,7 @@ referencedClasses: []
 smalltalk.APIBase.klass);
 
 
-smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
+smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -182,14 +164,32 @@ selector: unescape('withData%3A'),
 category: 'initializers',
 fn: function (aDict){
 var self=this;
-(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
+(self['@raw']=aDict);
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
+source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
 messageSends: ["at:"],
 referencedClasses: []
 }),
-smalltalk.User);
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@body'];
+return self;},
+args: [],
+source: unescape('body%0A%09%5E%20body.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.Comment);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -205,7 +205,7 @@ source: unescape('login%0A%09%5E%20login.'),
 messageSends: [],
 referencedClasses: []
 }),
-smalltalk.User);
+smalltalk.Comment);
 
 
 
@@ -600,7 +600,7 @@ referencedClasses: []
 smalltalk.Repo.klass);
 
 
-smalltalk.addClass('PullRequest', smalltalk.APIBase, ['title', 'number', 'raw', 'url'], 'GitHub');
+smalltalk.addClass('PullRequest', smalltalk.APIBase, ['title', 'number', 'raw', 'url', 'createdAt', 'updatedAt', 'mergeable'], 'GitHub');
 smalltalk.addMethod(
 unescape('_initialize'),
 smalltalk.method({
@@ -709,12 +709,47 @@ fn: function (data){
 var self=this;
 (self['@title']=smalltalk.send(data, "_at_", ["title"]));
 (self['@url']=smalltalk.send(data, "_at_", ["url"]));
+(self['@createdAt']=smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(data, "_at_", ["created_at"])]));
+(self['@updatedAt']=smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(data, "_at_", ["updated_at"])]));
 (self['@number']=smalltalk.send(data, "_at_", ["number"]));
+(self['@mergeable']=smalltalk.send(data, "_at_", ["mergeable"]));
 (self['@raw']=data);
 return self;},
 args: ["data"],
-source: unescape('withData%3A%20data%0A%09title%20%3A%3D%20data%20at%3A%20%27title%27.%0A%09url%20%3A%3D%20data%20at%3A%20%27url%27.%0A%09number%20%3A%3D%20data%20at%3A%20%27number%27.%0A%09raw%20%3A%3D%20data.'),
-messageSends: ["at:"],
+source: unescape('withData%3A%20data%0A%09title%20%3A%3D%20data%20at%3A%20%27title%27.%0A%09url%20%3A%3D%20data%20at%3A%20%27url%27.%0A%09createdAt%20%3A%3D%20Date%20fromString%3A%20%28data%20at%3A%20%27created_at%27%29.%0A%09updatedAt%20%3A%3D%20Date%20fromString%3A%20%28data%20at%3A%20%27updated_at%27%29.%0A%09number%20%3A%3D%20data%20at%3A%20%27number%27.%0A%09mergeable%20%3A%3D%20data%20at%3A%20%27mergeable%27.%0A%09raw%20%3A%3D%20data.'),
+messageSends: ["at:", "fromString:"],
+referencedClasses: ["Date"]
+}),
+smalltalk.PullRequest);
+
+smalltalk.addMethod(
+unescape('_createdAt'),
+smalltalk.method({
+selector: unescape('createdAt'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@createdAt'];
+return self;},
+args: [],
+source: unescape('createdAt%0A%09%5E%20createdAt.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.PullRequest);
+
+smalltalk.addMethod(
+unescape('_updatedAt'),
+smalltalk.method({
+selector: unescape('updatedAt'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@updatedAt'];
+return self;},
+args: [],
+source: unescape('updatedAt%0A%09%5E%20updatedAt.'),
+messageSends: [],
 referencedClasses: []
 }),
 smalltalk.PullRequest);
