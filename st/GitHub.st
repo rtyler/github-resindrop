@@ -326,10 +326,13 @@ initialize
 fromJSON: jsonString
 	| data |
 	data := (jQuery parseJSON: jsonString).
+	^ self withData: data.
+!
 
+withData: data
 	title := data at: 'title'.
 	url := data at: 'url'.
-	number := (data at: 'number') asNumber.
+	number := data at: 'number'.
 	raw := data.
 ! !
 
@@ -337,7 +340,9 @@ fromJSON: jsonString
 
 fetchFor: aFullProjectName withEachDo: aBlock finally: aFinalBlock
 	" aFullProjectName should take the form of ':user/:repo', i.e. 'rtyler/git-of-despair'"
-	self fetchAllFromUrl: ((self baseUrl), '/repos/', aFullProjectName, '/pulls') withEachDo: aBlock finally: aFinalBlock.
+	self fetchAllFromUrl: ((self baseUrl), '/repos/', aFullProjectName, '/pulls')
+		withEachDo: [ :item | aBlock value: (self new withData: item) ]
+		finally: aFinalBlock.
 !
 
 fetchFor: aFullProjectName withEachDo: aBlock

@@ -627,14 +627,11 @@ fn: function (jsonString){
 var self=this;
 var data=nil;
 (data=smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_parseJSON_", [jsonString]));
-(self['@title']=smalltalk.send(data, "_at_", ["title"]));
-(self['@url']=smalltalk.send(data, "_at_", ["url"]));
-(self['@number']=smalltalk.send(smalltalk.send(data, "_at_", ["number"]), "_asNumber", []));
-(self['@raw']=data);
+return smalltalk.send(self, "_withData_", [data]);
 return self;},
 args: ["jsonString"],
-source: unescape('fromJSON%3A%20jsonString%0A%09%7C%20data%20%7C%0A%09data%20%3A%3D%20%28jQuery%20parseJSON%3A%20jsonString%29.%0A%0A%09title%20%3A%3D%20data%20at%3A%20%27title%27.%0A%09url%20%3A%3D%20data%20at%3A%20%27url%27.%0A%09number%20%3A%3D%20%28data%20at%3A%20%27number%27%29%20asNumber.%0A%09raw%20%3A%3D%20data.'),
-messageSends: ["parseJSON:", "at:", "asNumber"],
+source: unescape('fromJSON%3A%20jsonString%0A%09%7C%20data%20%7C%0A%09data%20%3A%3D%20%28jQuery%20parseJSON%3A%20jsonString%29.%0A%09%5E%20self%20withData%3A%20data.'),
+messageSends: ["parseJSON:", "withData:"],
 referencedClasses: []
 }),
 smalltalk.PullRequest);
@@ -703,6 +700,25 @@ referencedClasses: []
 }),
 smalltalk.PullRequest);
 
+smalltalk.addMethod(
+unescape('_withData_'),
+smalltalk.method({
+selector: unescape('withData%3A'),
+category: 'initializers',
+fn: function (data){
+var self=this;
+(self['@title']=smalltalk.send(data, "_at_", ["title"]));
+(self['@url']=smalltalk.send(data, "_at_", ["url"]));
+(self['@number']=smalltalk.send(data, "_at_", ["number"]));
+(self['@raw']=data);
+return self;},
+args: ["data"],
+source: unescape('withData%3A%20data%0A%09title%20%3A%3D%20data%20at%3A%20%27title%27.%0A%09url%20%3A%3D%20data%20at%3A%20%27url%27.%0A%09number%20%3A%3D%20data%20at%3A%20%27number%27.%0A%09raw%20%3A%3D%20data.'),
+messageSends: ["at:"],
+referencedClasses: []
+}),
+smalltalk.PullRequest);
+
 
 smalltalk.addMethod(
 unescape('_fetchFor_withEachDo_finally_'),
@@ -711,11 +727,11 @@ selector: unescape('fetchFor%3AwithEachDo%3Afinally%3A'),
 category: 'not yet classified',
 fn: function (aFullProjectName, aBlock, aFinalBlock){
 var self=this;
-smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/repos/")]), "__comma", [aFullProjectName]), "__comma", [unescape("/pulls")]), aBlock, aFinalBlock]);
+smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/repos/")]), "__comma", [aFullProjectName]), "__comma", [unescape("/pulls")]), (function(item){return smalltalk.send(aBlock, "_value_", [smalltalk.send(smalltalk.send(self, "_new", []), "_withData_", [item])]);}), aFinalBlock]);
 return self;},
 args: ["aFullProjectName", "aBlock", "aFinalBlock"],
-source: unescape('fetchFor%3A%20aFullProjectName%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock%0A%09%22%20aFullProjectName%20should%20take%20the%20form%20of%20%27%3Auser/%3Arepo%27%2C%20i.e.%20%27rtyler/git-of-despair%27%22%0A%09self%20fetchAllFromUrl%3A%20%28%28self%20baseUrl%29%2C%20%27/repos/%27%2C%20aFullProjectName%2C%20%27/pulls%27%29%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock.'),
-messageSends: ["fetchAllFromUrl:withEachDo:finally:", unescape("%2C"), "baseUrl"],
+source: unescape('fetchFor%3A%20aFullProjectName%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock%0A%09%22%20aFullProjectName%20should%20take%20the%20form%20of%20%27%3Auser/%3Arepo%27%2C%20i.e.%20%27rtyler/git-of-despair%27%22%0A%09self%20fetchAllFromUrl%3A%20%28%28self%20baseUrl%29%2C%20%27/repos/%27%2C%20aFullProjectName%2C%20%27/pulls%27%29%0A%09%09withEachDo%3A%20%5B%20%3Aitem%20%7C%20aBlock%20value%3A%20%28self%20new%20withData%3A%20item%29%20%5D%0A%09%09finally%3A%20aFinalBlock.'),
+messageSends: ["fetchAllFromUrl:withEachDo:finally:", unescape("%2C"), "baseUrl", "value:", "withData:", "new"],
 referencedClasses: []
 }),
 smalltalk.PullRequest.klass);

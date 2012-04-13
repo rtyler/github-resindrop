@@ -451,10 +451,7 @@ fn: function (jsonString){
 var self=this;
 var data=nil;
 (data=smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_parseJSON_", [jsonString]));
-(self['@title']=smalltalk.send(data, "_at_", ["title"]));
-(self['@url']=smalltalk.send(data, "_at_", ["url"]));
-(self['@number']=smalltalk.send(smalltalk.send(data, "_at_", ["number"]), "_asNumber", []));
-(self['@raw']=data);
+return smalltalk.send(self, "_withData_", [data]);
 return self;}
 }),
 smalltalk.PullRequest);
@@ -503,6 +500,20 @@ return self;}
 }),
 smalltalk.PullRequest);
 
+smalltalk.addMethod(
+unescape('_withData_'),
+smalltalk.method({
+selector: unescape('withData%3A'),
+fn: function (data){
+var self=this;
+(self['@title']=smalltalk.send(data, "_at_", ["title"]));
+(self['@url']=smalltalk.send(data, "_at_", ["url"]));
+(self['@number']=smalltalk.send(data, "_at_", ["number"]));
+(self['@raw']=data);
+return self;}
+}),
+smalltalk.PullRequest);
+
 
 smalltalk.addMethod(
 unescape('_fetchFor_withEachDo_finally_'),
@@ -510,7 +521,7 @@ smalltalk.method({
 selector: unescape('fetchFor%3AwithEachDo%3Afinally%3A'),
 fn: function (aFullProjectName, aBlock, aFinalBlock){
 var self=this;
-smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/repos/")]), "__comma", [aFullProjectName]), "__comma", [unescape("/pulls")]), aBlock, aFinalBlock]);
+smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/repos/")]), "__comma", [aFullProjectName]), "__comma", [unescape("/pulls")]), (function(item){return smalltalk.send(aBlock, "_value_", [smalltalk.send(smalltalk.send(self, "_new", []), "_withData_", [item])]);}), aFinalBlock]);
 return self;}
 }),
 smalltalk.PullRequest.klass);
