@@ -1,5 +1,5 @@
 smalltalk.addPackage('GitHub', {});
-smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
+smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -7,14 +7,32 @@ selector: unescape('withData%3A'),
 category: 'initializers',
 fn: function (aDict){
 var self=this;
-(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
+(self['@raw']=aDict);
+(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
+(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
+source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
 messageSends: ["at:"],
 referencedClasses: []
 }),
-smalltalk.User);
+smalltalk.Comment);
+
+smalltalk.addMethod(
+unescape('_body'),
+smalltalk.method({
+selector: unescape('body'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@body'];
+return self;},
+args: [],
+source: unescape('body%0A%09%5E%20body.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.Comment);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -30,7 +48,7 @@ source: unescape('login%0A%09%5E%20login.'),
 messageSends: [],
 referencedClasses: []
 }),
-smalltalk.User);
+smalltalk.Comment);
 
 
 
@@ -156,7 +174,7 @@ referencedClasses: []
 smalltalk.APIBase.klass);
 
 
-smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
+smalltalk.addClass('User', smalltalk.Object, ['raw', 'fullName', 'login', 'imageUrl', 'userId', 'bio', 'email', 'profileUrl'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
 smalltalk.method({
@@ -164,32 +182,14 @@ selector: unescape('withData%3A'),
 category: 'initializers',
 fn: function (aDict){
 var self=this;
-(self['@raw']=aDict);
-(self['@body']=smalltalk.send(aDict, "_at_", ["body"]));
-(self['@login']=smalltalk.send(smalltalk.send(aDict, "_at_", ["user"]), "_at_", ["login"]));
+(self['@login']=smalltalk.send(aDict, "_at_", ["login"]));
 return self;},
 args: ["aDict"],
-source: unescape('withData%3A%20aDict%0A%09raw%20%3A%3D%20aDict.%0A%09body%20%3A%3D%20aDict%20at%3A%20%27body%27.%0A%09login%20%3A%3D%20%28aDict%20at%3A%20%27user%27%29%20at%3A%20%27login%27.'),
+source: unescape('withData%3A%20aDict%0A%09%22%20Seed%20the%20User%20object%20with%20data%20acquired%20from%20the%20API%22%0A%09login%20%3A%3D%20aDict%20at%3A%20%27login%27.'),
 messageSends: ["at:"],
 referencedClasses: []
 }),
-smalltalk.Comment);
-
-smalltalk.addMethod(
-unescape('_body'),
-smalltalk.method({
-selector: unescape('body'),
-category: 'accessors',
-fn: function (){
-var self=this;
-return self['@body'];
-return self;},
-args: [],
-source: unescape('body%0A%09%5E%20body.'),
-messageSends: [],
-referencedClasses: []
-}),
-smalltalk.Comment);
+smalltalk.User);
 
 smalltalk.addMethod(
 unescape('_login'),
@@ -205,7 +205,7 @@ source: unescape('login%0A%09%5E%20login.'),
 messageSends: [],
 referencedClasses: []
 }),
-smalltalk.Comment);
+smalltalk.User);
 
 
 
@@ -598,5 +598,142 @@ messageSends: ["fetchAllFromUrl:withEachDo:finally:", unescape("%2C"), "baseUrl"
 referencedClasses: []
 }),
 smalltalk.Repo.klass);
+
+
+smalltalk.addClass('PullRequest', smalltalk.APIBase, ['title', 'number', 'raw', 'url'], 'GitHub');
+smalltalk.addMethod(
+unescape('_initialize'),
+smalltalk.method({
+selector: unescape('initialize'),
+category: 'initializers',
+fn: function (){
+var self=this;
+smalltalk.send(self, "_initialize", [], smalltalk.APIBase);
+(self['@title']=nil);
+return self;},
+args: [],
+source: unescape('initialize%0A%09super%20initialize.%0A%09title%20%3A%3D%20nil.'),
+messageSends: ["initialize"],
+referencedClasses: []
+}),
+smalltalk.PullRequest);
+
+smalltalk.addMethod(
+unescape('_fromJSON_'),
+smalltalk.method({
+selector: unescape('fromJSON%3A'),
+category: 'initializers',
+fn: function (jsonString){
+var self=this;
+var data=nil;
+(data=smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_parseJSON_", [jsonString]));
+(self['@title']=smalltalk.send(data, "_at_", ["title"]));
+(self['@url']=smalltalk.send(data, "_at_", ["url"]));
+(self['@number']=smalltalk.send(smalltalk.send(data, "_at_", ["number"]), "_asNumber", []));
+(self['@raw']=data);
+return self;},
+args: ["jsonString"],
+source: unescape('fromJSON%3A%20jsonString%0A%09%7C%20data%20%7C%0A%09data%20%3A%3D%20%28jQuery%20parseJSON%3A%20jsonString%29.%0A%0A%09title%20%3A%3D%20data%20at%3A%20%27title%27.%0A%09url%20%3A%3D%20data%20at%3A%20%27url%27.%0A%09number%20%3A%3D%20%28data%20at%3A%20%27number%27%29%20asNumber.%0A%09raw%20%3A%3D%20data.'),
+messageSends: ["parseJSON:", "at:", "asNumber"],
+referencedClasses: []
+}),
+smalltalk.PullRequest);
+
+smalltalk.addMethod(
+unescape('_title'),
+smalltalk.method({
+selector: unescape('title'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@title'];
+return self;},
+args: [],
+source: unescape('title%0A%09%5E%20title.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.PullRequest);
+
+smalltalk.addMethod(
+unescape('_number'),
+smalltalk.method({
+selector: unescape('number'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@number'];
+return self;},
+args: [],
+source: unescape('number%0A%09%5E%20number.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.PullRequest);
+
+smalltalk.addMethod(
+unescape('_raw'),
+smalltalk.method({
+selector: unescape('raw'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@raw'];
+return self;},
+args: [],
+source: unescape('raw%0A%09%5E%20raw.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.PullRequest);
+
+smalltalk.addMethod(
+unescape('_url'),
+smalltalk.method({
+selector: unescape('url'),
+category: 'accessors',
+fn: function (){
+var self=this;
+return self['@url'];
+return self;},
+args: [],
+source: unescape('url%0A%09%5E%20url.'),
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.PullRequest);
+
+
+smalltalk.addMethod(
+unescape('_fetchFor_withEachDo_finally_'),
+smalltalk.method({
+selector: unescape('fetchFor%3AwithEachDo%3Afinally%3A'),
+category: 'not yet classified',
+fn: function (aFullProjectName, aBlock, aFinalBlock){
+var self=this;
+smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(smalltalk.send(smalltalk.send(smalltalk.send(self, "_baseUrl", []), "__comma", [unescape("/repos/")]), "__comma", [aFullProjectName]), "__comma", [unescape("/pulls")]), aBlock, aFinalBlock]);
+return self;},
+args: ["aFullProjectName", "aBlock", "aFinalBlock"],
+source: unescape('fetchFor%3A%20aFullProjectName%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock%0A%09%22%20aFullProjectName%20should%20take%20the%20form%20of%20%27%3Auser/%3Arepo%27%2C%20i.e.%20%27rtyler/git-of-despair%27%22%0A%09self%20fetchAllFromUrl%3A%20%28%28self%20baseUrl%29%2C%20%27/repos/%27%2C%20aFullProjectName%2C%20%27/pulls%27%29%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock.'),
+messageSends: ["fetchAllFromUrl:withEachDo:finally:", unescape("%2C"), "baseUrl"],
+referencedClasses: []
+}),
+smalltalk.PullRequest.klass);
+
+smalltalk.addMethod(
+unescape('_fetchFor_withEachDo_'),
+smalltalk.method({
+selector: unescape('fetchFor%3AwithEachDo%3A'),
+category: 'not yet classified',
+fn: function (aFullProjectName, aBlock){
+var self=this;
+smalltalk.send(self, "_fetchFor_withEachDo_finally_", [aFullProjectName, aBlock, (function(){return nil;})]);
+return self;},
+args: ["aFullProjectName", "aBlock"],
+source: unescape('fetchFor%3A%20aFullProjectName%20withEachDo%3A%20aBlock%0A%09self%20fetchFor%3A%20aFullProjectName%20withEachDo%3A%20aBlock%20finally%3A%20%5B%5D.'),
+messageSends: ["fetchFor:withEachDo:finally:"],
+referencedClasses: []
+}),
+smalltalk.PullRequest.klass);
 
 
