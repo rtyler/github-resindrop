@@ -1,4 +1,78 @@
 smalltalk.addPackage('GitHub', {});
+smalltalk.addClass('Response', smalltalk.Object, ['code', 'data', 'links'], 'GitHub');
+smalltalk.addMethod(
+unescape('_withData_'),
+smalltalk.method({
+selector: unescape('withData%3A'),
+fn: function (jsObject){
+var self=this;
+(self['@code']=smalltalk.send(smalltalk.send(jsObject, "_meta", []), "_at_", ["status"]));
+(self['@data']=smalltalk.send(jsObject, "_data", []));
+(self['@links']=smalltalk.send(smalltalk.send(jsObject, "_meta", []), "_at_", ["Link"]));
+(($receiver = self['@links']) == nil || $receiver == undefined) ? (function(){return (self['@links']=smalltalk.send((smalltalk.Array || Array), "_new", []));})() : $receiver;
+return self;}
+}),
+smalltalk.Response);
+
+smalltalk.addMethod(
+unescape('_ifSuccess_'),
+smalltalk.method({
+selector: unescape('ifSuccess%3A'),
+fn: function (aBlock){
+var self=this;
+smalltalk.send(smalltalk.send(self['@code'], "__eq", [(200)]), "_ifTrue_", [aBlock]);
+return self;}
+}),
+smalltalk.Response);
+
+smalltalk.addMethod(
+unescape('_unlessSuccess_'),
+smalltalk.method({
+selector: unescape('unlessSuccess%3A'),
+fn: function (aBlock){
+var self=this;
+smalltalk.send(smalltalk.send(self['@code'], "__eq", [(200)]), "_ifFalse_", [aBlock]);
+return self;}
+}),
+smalltalk.Response);
+
+smalltalk.addMethod(
+unescape('_code'),
+smalltalk.method({
+selector: unescape('code'),
+fn: function (){
+var self=this;
+return self['@code'];
+return self;}
+}),
+smalltalk.Response);
+
+smalltalk.addMethod(
+unescape('_data'),
+smalltalk.method({
+selector: unescape('data'),
+fn: function (){
+var self=this;
+return self['@data'];
+return self;}
+}),
+smalltalk.Response);
+
+smalltalk.addMethod(
+unescape('_nextLink'),
+smalltalk.method({
+selector: unescape('nextLink'),
+fn: function (){
+var self=this;
+try{smalltalk.send(self['@links'], "_do_", [(function(link){return ((($receiver = smalltalk.send(smalltalk.send(smalltalk.send(link, "_at_", [(2)]), "_at_", ["rel"]), "__eq", ["next"])).klass === smalltalk.Boolean) ? ($receiver ? (function(){return (function(){throw({name: 'stReturn', selector: '_nextLink', fn: function(){return smalltalk.send(link, "_at_", [(1)])}})})();})() : nil) : smalltalk.send($receiver, "_ifTrue_", [(function(){return (function(){throw({name: 'stReturn', selector: '_nextLink', fn: function(){return smalltalk.send(link, "_at_", [(1)])}})})();})]));})]);
+(function(){throw({name: 'stReturn', selector: '_nextLink', fn: function(){return nil}})})();
+return self;
+} catch(e) {if(e.name === 'stReturn' && e.selector === '_nextLink'){return e.fn()} throw(e)}}
+}),
+smalltalk.Response);
+
+
+
 smalltalk.addClass('Comment', smalltalk.Object, ['raw', 'login', 'body', 'created_at'], 'GitHub');
 smalltalk.addMethod(
 unescape('_withData_'),
@@ -105,9 +179,8 @@ smalltalk.method({
 selector: unescape('fetchAllFromUrl%3AwithEachDo%3Afinally%3A'),
 fn: function (aUrlString, aBlock, aFinalBlock){
 var self=this;
-smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [aUrlString, smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){var links=nil;
-var foundNext=nil;
-smalltalk.send(smalltalk.send(result, "_data", []), "_do_", [(function(item){smalltalk.send(item, "_at_put_", ["updated_at", smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(item, "_at_", ["updated_at"])])]);return smalltalk.send(aBlock, "_value_", [item]);})]);(links=smalltalk.send(smalltalk.send(result, "_meta", []), "_at_", ["Link"]));(foundNext=false);(($receiver = links) != nil && $receiver != undefined) ? (function(){return smalltalk.send(links, "_do_", [(function(link){return ((($receiver = smalltalk.send(smalltalk.send(smalltalk.send(link, "_at_", [(2)]), "_at_", ["rel"]), "__eq", ["next"])).klass === smalltalk.Boolean) ? ($receiver ? (function(){(foundNext=true);return smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(link, "_at_", [(1)]), aBlock, aFinalBlock]);})() : nil) : smalltalk.send($receiver, "_ifTrue_", [(function(){(foundNext=true);return smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(link, "_at_", [(1)]), aBlock, aFinalBlock]);})]));})]);})() : nil;return ((($receiver = foundNext).klass === smalltalk.Boolean) ? (! $receiver ? (function(){return smalltalk.send(aFinalBlock, "_value", []);})() : nil) : smalltalk.send($receiver, "_ifFalse_", [(function(){return smalltalk.send(aFinalBlock, "_value", []);})]));})]),smalltalk.send("error", "__minus_gt", [(function(){return smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(unescape("Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20"), "__comma", [aUrlString])]);})])])]);
+smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [aUrlString, smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){var response=nil;
+(response=smalltalk.send(smalltalk.send((smalltalk.Response || Response), "_new", []), "_withData_", [result]));return smalltalk.send(response, "_ifSuccess_", [(function(){smalltalk.send(smalltalk.send(response, "_data", []), "_do_", [(function(item){smalltalk.send(item, "_at_put_", ["updated_at", smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(item, "_at_", ["updated_at"])])]);return smalltalk.send(aBlock, "_value_", [item]);})]);return (($receiver = smalltalk.send(response, "_nextLink", [])) == nil || $receiver == undefined) ? (function(){return smalltalk.send(aFinalBlock, "_value_", [true]);})() : (function(){return smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(response, "_nextLink", []), aBlock, aFinalBlock]);})();})]);})]),smalltalk.send("error", "__minus_gt", [(function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(unescape("Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20"), "__comma", [aUrlString])]);return smalltalk.send(aFinalBlock, "_value_", [false]);})])])]);
 return self;}
 }),
 smalltalk.APIBase.klass);

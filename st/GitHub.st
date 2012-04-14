@@ -1,4 +1,55 @@
 Smalltalk current createPackage: 'GitHub' properties: #{}!
+Object subclass: #Response
+	instanceVariableNames: 'code data links'
+	category: 'GitHub'!
+
+!Response methodsFor: 'accessors'!
+
+code
+	^ code.
+!
+
+data
+	^ data.
+!
+
+nextLink
+	"In order to pull the /appropriate/ *next* link out of the GitHub nonsense Link array,
+	 we have to do a lot of hard-coded, brittle positional crap.
+     ----
+    'Link': [ // pagination headers and other links
+      ['https://api.github.com?page=2', {'rel': 'next'}]
+    ]"
+	links do: [ :link |
+		((link at: 2) at: 'rel') = 'next' ifTrue: [
+			^ (link at: 1).
+		].
+	].
+	^ nil.
+! !
+
+!Response methodsFor: 'conditionals'!
+
+ifSuccess: aBlock
+	code = 200 ifTrue: aBlock.
+!
+
+unlessSuccess: aBlock
+	code = 200 ifFalse: aBlock.
+! !
+
+!Response methodsFor: 'initializers'!
+
+withData: jsObject
+	code := jsObject meta at: 'status'.
+	data := jsObject data.
+	links := jsObject meta at: 'Link'.
+
+	links ifNil: [
+		links := Array new.
+	].
+! !
+
 Object subclass: #Comment
 	instanceVariableNames: 'raw login body created_at'
 	category: 'GitHub'!
@@ -63,25 +114,27 @@ fetchAllFromUrl: aUrlString withEachDo: aBlock finally: aFinalBlock
 	jQuery ajax: aUrlString options: #{
 		'dataType' -> 'jsonp'.
 		'success' -> [ :result |
-			| links foundNext |
+			| response |
+			response := Response new withData: result.
 			" This special-case handling for the updated_at member will allow us to generally sort
 			   the result set by updated date, which we will need to do often"
-			result data do: [ :item |
-				item at: 'updated_at' put: (Date fromString: (item at: 'updated_at')).
-				aBlock value: item ].
-	
-			links := result meta at: 'Link'.
-			foundNext := false.
-			links ifNotNil: [
-				links do: [ :link |
-					((link at: 2) at: 'rel') = 'next'
-						ifTrue: [
-							foundNext := true.
-							self fetchAllFromUrl: (link at: 1) withEachDo: aBlock finally: aFinalBlock.
-			]]].
-			foundNext ifFalse: [ aFinalBlock value. ].
+
+			response ifSuccess: [
+				response data do: [ :item |
+					item at: 'updated_at' put: (Date fromString: (item at: 'updated_at')).
+					aBlock value: item
+				].
+
+				response nextLink
+					ifNil: [ " We don't have any moire records to load"
+						aFinalBlock value: true.
+					]
+					ifNotNil: [ " We have some more records to load, kick off the next request "
+						self fetchAllFromUrl: (response nextLink) withEachDo: aBlock finally: aFinalBlock.
+					].
+			].
 		].
-		'error' -> [ console log: ('Error calling #fetchAllFromUrl with the URL: ', aUrlString) ]
+		'error' -> [ console log: ('Error calling #fetchAllFromUrl with the URL: ', aUrlString). aFinalBlock value: false ]
 	}.
 !
 
