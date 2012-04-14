@@ -31,11 +31,15 @@ nextLink
 !Response methodsFor: 'conditionals'!
 
 ifSuccess: aBlock
-	code = 200 ifTrue: aBlock.
+	^ self ifSuccess: aBlock ifNotSuccess: [].
 !
 
 unlessSuccess: aBlock
 	code = 200 ifFalse: aBlock.
+!
+
+ifSuccess: aBlock ifNotSuccess: aBadBlock
+	code = 200 ifTrue: aBlock ifFalse: aBadBlock.
 ! !
 
 !Response methodsFor: 'initializers'!
@@ -132,7 +136,8 @@ fetchAllFromUrl: aUrlString withEachDo: aBlock finally: aFinalBlock
 					ifNotNil: [ " We have some more records to load, kick off the next request "
 						self fetchAllFromUrl: (response nextLink) withEachDo: aBlock finally: aFinalBlock.
 					].
-			].
+			]
+			ifNotSuccess: [ aFinalBlock value: false ].
 		].
 		'error' -> [ console log: ('Error calling #fetchAllFromUrl with the URL: ', aUrlString). aFinalBlock value: false ]
 	}.

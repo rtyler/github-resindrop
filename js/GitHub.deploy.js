@@ -20,7 +20,7 @@ smalltalk.method({
 selector: unescape('ifSuccess%3A'),
 fn: function (aBlock){
 var self=this;
-smalltalk.send(smalltalk.send(self['@code'], "__eq", [(200)]), "_ifTrue_", [aBlock]);
+return smalltalk.send(self, "_ifSuccess_ifNotSuccess_", [aBlock, (function(){return nil;})]);
 return self;}
 }),
 smalltalk.Response);
@@ -68,6 +68,17 @@ try{smalltalk.send(self['@links'], "_do_", [(function(link){return ((($receiver 
 (function(){throw({name: 'stReturn', selector: '_nextLink', fn: function(){return nil}})})();
 return self;
 } catch(e) {if(e.name === 'stReturn' && e.selector === '_nextLink'){return e.fn()} throw(e)}}
+}),
+smalltalk.Response);
+
+smalltalk.addMethod(
+unescape('_ifSuccess_ifNotSuccess_'),
+smalltalk.method({
+selector: unescape('ifSuccess%3AifNotSuccess%3A'),
+fn: function (aBlock, aBadBlock){
+var self=this;
+smalltalk.send(smalltalk.send(self['@code'], "__eq", [(200)]), "_ifTrue_ifFalse_", [aBlock, aBadBlock]);
+return self;}
 }),
 smalltalk.Response);
 
@@ -180,7 +191,7 @@ selector: unescape('fetchAllFromUrl%3AwithEachDo%3Afinally%3A'),
 fn: function (aUrlString, aBlock, aFinalBlock){
 var self=this;
 smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [aUrlString, smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){var response=nil;
-(response=smalltalk.send(smalltalk.send((smalltalk.Response || Response), "_new", []), "_withData_", [result]));return smalltalk.send(response, "_ifSuccess_", [(function(){smalltalk.send(smalltalk.send(response, "_data", []), "_do_", [(function(item){smalltalk.send(item, "_at_put_", ["updated_at", smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(item, "_at_", ["updated_at"])])]);return smalltalk.send(aBlock, "_value_", [item]);})]);return (($receiver = smalltalk.send(response, "_nextLink", [])) == nil || $receiver == undefined) ? (function(){return smalltalk.send(aFinalBlock, "_value_", [true]);})() : (function(){return smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(response, "_nextLink", []), aBlock, aFinalBlock]);})();})]);})]),smalltalk.send("error", "__minus_gt", [(function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(unescape("Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20"), "__comma", [aUrlString])]);return smalltalk.send(aFinalBlock, "_value_", [false]);})])])]);
+(response=smalltalk.send(smalltalk.send((smalltalk.Response || Response), "_new", []), "_withData_", [result]));return smalltalk.send(response, "_ifSuccess_ifNotSuccess_", [(function(){smalltalk.send(smalltalk.send(response, "_data", []), "_do_", [(function(item){smalltalk.send(item, "_at_put_", ["updated_at", smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(item, "_at_", ["updated_at"])])]);return smalltalk.send(aBlock, "_value_", [item]);})]);return (($receiver = smalltalk.send(response, "_nextLink", [])) == nil || $receiver == undefined) ? (function(){return smalltalk.send(aFinalBlock, "_value_", [true]);})() : (function(){return smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(response, "_nextLink", []), aBlock, aFinalBlock]);})();}), (function(){return smalltalk.send(aFinalBlock, "_value_", [false]);})]);})]),smalltalk.send("error", "__minus_gt", [(function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(unescape("Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20"), "__comma", [aUrlString])]);return smalltalk.send(aFinalBlock, "_value_", [false]);})])])]);
 return self;}
 }),
 smalltalk.APIBase.klass);

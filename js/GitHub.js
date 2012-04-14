@@ -26,11 +26,11 @@ selector: unescape('ifSuccess%3A'),
 category: 'conditionals',
 fn: function (aBlock){
 var self=this;
-smalltalk.send(smalltalk.send(self['@code'], "__eq", [(200)]), "_ifTrue_", [aBlock]);
+return smalltalk.send(self, "_ifSuccess_ifNotSuccess_", [aBlock, (function(){return nil;})]);
 return self;},
 args: ["aBlock"],
-source: unescape('ifSuccess%3A%20aBlock%0A%09code%20%3D%20200%20ifTrue%3A%20aBlock.'),
-messageSends: ["ifTrue:", unescape("%3D")],
+source: unescape('ifSuccess%3A%20aBlock%0A%09%5E%20self%20ifSuccess%3A%20aBlock%20ifNotSuccess%3A%20%5B%5D.'),
+messageSends: ["ifSuccess:ifNotSuccess:"],
 referencedClasses: []
 }),
 smalltalk.Response);
@@ -97,6 +97,22 @@ return self;
 args: [],
 source: unescape('nextLink%0A%09%22In%20order%20to%20pull%20the%20/appropriate/%20*next*%20link%20out%20of%20the%20GitHub%20nonsense%20Link%20array%2C%0A%09%20we%20have%20to%20do%20a%20lot%20of%20hard-coded%2C%20brittle%20positional%20crap.%0A%20%20%20%20%20----%0A%20%20%20%20%27Link%27%3A%20%5B%20//%20pagination%20headers%20and%20other%20links%0A%20%20%20%20%20%20%5B%27https%3A//api.github.com%3Fpage%3D2%27%2C%20%7B%27rel%27%3A%20%27next%27%7D%5D%0A%20%20%20%20%5D%22%0A%09links%20do%3A%20%5B%20%3Alink%20%7C%0A%09%09%28%28link%20at%3A%202%29%20at%3A%20%27rel%27%29%20%3D%20%27next%27%20ifTrue%3A%20%5B%0A%09%09%09%5E%20%28link%20at%3A%201%29.%0A%09%09%5D.%0A%09%5D.%0A%09%5E%20nil.'),
 messageSends: ["do:", "ifTrue:", unescape("%3D"), "at:"],
+referencedClasses: []
+}),
+smalltalk.Response);
+
+smalltalk.addMethod(
+unescape('_ifSuccess_ifNotSuccess_'),
+smalltalk.method({
+selector: unescape('ifSuccess%3AifNotSuccess%3A'),
+category: 'conditionals',
+fn: function (aBlock, aBadBlock){
+var self=this;
+smalltalk.send(smalltalk.send(self['@code'], "__eq", [(200)]), "_ifTrue_ifFalse_", [aBlock, aBadBlock]);
+return self;},
+args: ["aBlock", "aBadBlock"],
+source: unescape('ifSuccess%3A%20aBlock%20ifNotSuccess%3A%20aBadBlock%0A%09code%20%3D%20200%20ifTrue%3A%20aBlock%20ifFalse%3A%20aBadBlock.'),
+messageSends: ["ifTrue:ifFalse:", unescape("%3D")],
 referencedClasses: []
 }),
 smalltalk.Response);
@@ -251,11 +267,11 @@ category: 'not yet classified',
 fn: function (aUrlString, aBlock, aFinalBlock){
 var self=this;
 smalltalk.send((typeof jQuery == 'undefined' ? nil : jQuery), "_ajax_options_", [aUrlString, smalltalk.HashedCollection._fromPairs_([smalltalk.send("dataType", "__minus_gt", ["jsonp"]),smalltalk.send("success", "__minus_gt", [(function(result){var response=nil;
-(response=smalltalk.send(smalltalk.send((smalltalk.Response || Response), "_new", []), "_withData_", [result]));return smalltalk.send(response, "_ifSuccess_", [(function(){smalltalk.send(smalltalk.send(response, "_data", []), "_do_", [(function(item){smalltalk.send(item, "_at_put_", ["updated_at", smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(item, "_at_", ["updated_at"])])]);return smalltalk.send(aBlock, "_value_", [item]);})]);return (($receiver = smalltalk.send(response, "_nextLink", [])) == nil || $receiver == undefined) ? (function(){return smalltalk.send(aFinalBlock, "_value_", [true]);})() : (function(){return smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(response, "_nextLink", []), aBlock, aFinalBlock]);})();})]);})]),smalltalk.send("error", "__minus_gt", [(function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(unescape("Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20"), "__comma", [aUrlString])]);return smalltalk.send(aFinalBlock, "_value_", [false]);})])])]);
+(response=smalltalk.send(smalltalk.send((smalltalk.Response || Response), "_new", []), "_withData_", [result]));return smalltalk.send(response, "_ifSuccess_ifNotSuccess_", [(function(){smalltalk.send(smalltalk.send(response, "_data", []), "_do_", [(function(item){smalltalk.send(item, "_at_put_", ["updated_at", smalltalk.send((smalltalk.Date || Date), "_fromString_", [smalltalk.send(item, "_at_", ["updated_at"])])]);return smalltalk.send(aBlock, "_value_", [item]);})]);return (($receiver = smalltalk.send(response, "_nextLink", [])) == nil || $receiver == undefined) ? (function(){return smalltalk.send(aFinalBlock, "_value_", [true]);})() : (function(){return smalltalk.send(self, "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(response, "_nextLink", []), aBlock, aFinalBlock]);})();}), (function(){return smalltalk.send(aFinalBlock, "_value_", [false]);})]);})]),smalltalk.send("error", "__minus_gt", [(function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", [smalltalk.send(unescape("Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20"), "__comma", [aUrlString])]);return smalltalk.send(aFinalBlock, "_value_", [false]);})])])]);
 return self;},
 args: ["aUrlString", "aBlock", "aFinalBlock"],
-source: unescape('fetchAllFromUrl%3A%20aUrlString%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock%0A%09%22%20Fetch%20the%20GitHub%20data%20from%20aUrlString%20and%20call%20aBlock%20with%20the%20results%20%22%0A%09jQuery%20ajax%3A%20aUrlString%20options%3A%20%23%7B%0A%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%27success%27%20-%3E%20%5B%20%3Aresult%20%7C%0A%09%09%09%7C%20response%20%7C%0A%09%09%09response%20%3A%3D%20Response%20new%20withData%3A%20result.%0A%09%09%09%22%20This%20special-case%20handling%20for%20the%20updated_at%20member%20will%20allow%20us%20to%20generally%20sort%0A%09%09%09%20%20%20the%20result%20set%20by%20updated%20date%2C%20which%20we%20will%20need%20to%20do%20often%22%0A%0A%09%09%09response%20ifSuccess%3A%20%5B%0A%09%09%09%09response%20data%20do%3A%20%5B%20%3Aitem%20%7C%0A%09%09%09%09%09item%20at%3A%20%27updated_at%27%20put%3A%20%28Date%20fromString%3A%20%28item%20at%3A%20%27updated_at%27%29%29.%0A%09%09%09%09%09aBlock%20value%3A%20item%0A%09%09%09%09%5D.%0A%0A%09%09%09%09response%20nextLink%0A%09%09%09%09%09ifNil%3A%20%5B%20%22%20We%20don%27t%20have%20any%20moire%20records%20to%20load%22%0A%09%09%09%09%09%09aFinalBlock%20value%3A%20true.%0A%09%09%09%09%09%5D%0A%09%09%09%09%09ifNotNil%3A%20%5B%20%22%20We%20have%20some%20more%20records%20to%20load%2C%20kick%20off%20the%20next%20request%20%22%0A%09%09%09%09%09%09self%20fetchAllFromUrl%3A%20%28response%20nextLink%29%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock.%0A%09%09%09%09%09%5D.%0A%09%09%09%5D.%0A%09%09%5D.%0A%09%09%27error%27%20-%3E%20%5B%20console%20log%3A%20%28%27Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20%27%2C%20aUrlString%29.%20aFinalBlock%20value%3A%20false%20%5D%0A%09%7D.'),
-messageSends: ["ajax:options:", unescape("-%3E"), "withData:", "new", "ifSuccess:", "do:", "data", "at:put:", "fromString:", "at:", "value:", "ifNil:ifNotNil:", "nextLink", "fetchAllFromUrl:withEachDo:finally:", "log:", unescape("%2C")],
+source: unescape('fetchAllFromUrl%3A%20aUrlString%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock%0A%09%22%20Fetch%20the%20GitHub%20data%20from%20aUrlString%20and%20call%20aBlock%20with%20the%20results%20%22%0A%09jQuery%20ajax%3A%20aUrlString%20options%3A%20%23%7B%0A%09%09%27dataType%27%20-%3E%20%27jsonp%27.%0A%09%09%27success%27%20-%3E%20%5B%20%3Aresult%20%7C%0A%09%09%09%7C%20response%20%7C%0A%09%09%09response%20%3A%3D%20Response%20new%20withData%3A%20result.%0A%09%09%09%22%20This%20special-case%20handling%20for%20the%20updated_at%20member%20will%20allow%20us%20to%20generally%20sort%0A%09%09%09%20%20%20the%20result%20set%20by%20updated%20date%2C%20which%20we%20will%20need%20to%20do%20often%22%0A%0A%09%09%09response%20ifSuccess%3A%20%5B%0A%09%09%09%09response%20data%20do%3A%20%5B%20%3Aitem%20%7C%0A%09%09%09%09%09item%20at%3A%20%27updated_at%27%20put%3A%20%28Date%20fromString%3A%20%28item%20at%3A%20%27updated_at%27%29%29.%0A%09%09%09%09%09aBlock%20value%3A%20item%0A%09%09%09%09%5D.%0A%0A%09%09%09%09response%20nextLink%0A%09%09%09%09%09ifNil%3A%20%5B%20%22%20We%20don%27t%20have%20any%20moire%20records%20to%20load%22%0A%09%09%09%09%09%09aFinalBlock%20value%3A%20true.%0A%09%09%09%09%09%5D%0A%09%09%09%09%09ifNotNil%3A%20%5B%20%22%20We%20have%20some%20more%20records%20to%20load%2C%20kick%20off%20the%20next%20request%20%22%0A%09%09%09%09%09%09self%20fetchAllFromUrl%3A%20%28response%20nextLink%29%20withEachDo%3A%20aBlock%20finally%3A%20aFinalBlock.%0A%09%09%09%09%09%5D.%0A%09%09%09%5D%0A%09%09%09ifNotSuccess%3A%20%5B%20aFinalBlock%20value%3A%20false%20%5D.%0A%09%09%5D.%0A%09%09%27error%27%20-%3E%20%5B%20console%20log%3A%20%28%27Error%20calling%20%23fetchAllFromUrl%20with%20the%20URL%3A%20%27%2C%20aUrlString%29.%20aFinalBlock%20value%3A%20false%20%5D%0A%09%7D.'),
+messageSends: ["ajax:options:", unescape("-%3E"), "withData:", "new", "ifSuccess:ifNotSuccess:", "do:", "data", "at:put:", "fromString:", "at:", "value:", "ifNil:ifNotNil:", "nextLink", "fetchAllFromUrl:withEachDo:finally:", "log:", unescape("%2C")],
 referencedClasses: ["Response", "Date"]
 }),
 smalltalk.APIBase.klass);
