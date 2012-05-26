@@ -310,6 +310,16 @@ recentlyClosed: aPageCallback loadAll: shouldLoadAll
 			]
 	}.
 	^ true.
+!
+
+issues: aBlock finally: aFinallyBlock
+	"Call aPageCallback with every page of issues loaded from GitHub"
+	authenticated ifFalse: [ console log: 'Cannot load issues unless we have an access token'. ^ false ].
+
+	Issues fetchAllFromUrl: (self apiUrlFor: '/issues')
+			withEachDo: [ :item | aBlock value: (Issue new withData: item; setToken: token)]
+			finally: aFinallyBlock.
+	^ true.
 ! !
 
 !Issues class methodsFor: 'not yet classified'!

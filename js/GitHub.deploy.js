@@ -442,6 +442,20 @@ return self;
 }),
 smalltalk.Issues);
 
+smalltalk.addMethod(
+unescape('_issues_finally_'),
+smalltalk.method({
+selector: unescape('issues%3Afinally%3A'),
+fn: function (aBlock, aFinallyBlock){
+var self=this;
+try{((($receiver = self['@authenticated']).klass === smalltalk.Boolean) ? (! $receiver ? (function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_issues_finally_', fn: function(){return false}})})();})() : nil) : smalltalk.send($receiver, "_ifFalse_", [(function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_issues_finally_', fn: function(){return false}})})();})]));
+smalltalk.send((smalltalk.Issues || Issues), "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(self, "_apiUrlFor_", [unescape("/issues")]), (function(item){return smalltalk.send(aBlock, "_value_", [(function($rec){smalltalk.send($rec, "_withData_", [item]);return smalltalk.send($rec, "_setToken_", [self['@token']]);})(smalltalk.send((smalltalk.Issue || Issue), "_new", []))]);}), aFinallyBlock]);
+(function(){throw({name: 'stReturn', selector: '_issues_finally_', fn: function(){return true}})})();
+return self;
+} catch(e) {if(e.name === 'stReturn' && e.selector === '_issues_finally_'){return e.fn()} throw(e)}}
+}),
+smalltalk.Issues);
+
 
 smalltalk.addMethod(
 unescape('_fetchIssuesFor_withEachDo_finally_'),

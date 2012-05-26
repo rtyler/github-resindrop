@@ -617,6 +617,25 @@ referencedClasses: ["Issue"]
 }),
 smalltalk.Issues);
 
+smalltalk.addMethod(
+unescape('_issues_finally_'),
+smalltalk.method({
+selector: unescape('issues%3Afinally%3A'),
+category: 'not yet classified',
+fn: function (aBlock, aFinallyBlock){
+var self=this;
+try{((($receiver = self['@authenticated']).klass === smalltalk.Boolean) ? (! $receiver ? (function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_issues_finally_', fn: function(){return false}})})();})() : nil) : smalltalk.send($receiver, "_ifFalse_", [(function(){smalltalk.send((typeof console == 'undefined' ? nil : console), "_log_", ["Cannot load issues unless we have an access token"]);return (function(){throw({name: 'stReturn', selector: '_issues_finally_', fn: function(){return false}})})();})]));
+smalltalk.send((smalltalk.Issues || Issues), "_fetchAllFromUrl_withEachDo_finally_", [smalltalk.send(self, "_apiUrlFor_", [unescape("/issues")]), (function(item){return smalltalk.send(aBlock, "_value_", [(function($rec){smalltalk.send($rec, "_withData_", [item]);return smalltalk.send($rec, "_setToken_", [self['@token']]);})(smalltalk.send((smalltalk.Issue || Issue), "_new", []))]);}), aFinallyBlock]);
+(function(){throw({name: 'stReturn', selector: '_issues_finally_', fn: function(){return true}})})();
+return self;
+} catch(e) {if(e.name === 'stReturn' && e.selector === '_issues_finally_'){return e.fn()} throw(e)}},
+args: ["aBlock", "aFinallyBlock"],
+source: unescape('issues%3A%20aBlock%20finally%3A%20aFinallyBlock%0A%09%22Call%20aPageCallback%20with%20every%20page%20of%20issues%20loaded%20from%20GitHub%22%0A%09authenticated%20ifFalse%3A%20%5B%20console%20log%3A%20%27Cannot%20load%20issues%20unless%20we%20have%20an%20access%20token%27.%20%5E%20false%20%5D.%0A%0A%09Issues%20fetchAllFromUrl%3A%20%28self%20apiUrlFor%3A%20%27/issues%27%29%0A%09%09%09withEachDo%3A%20%5B%20%3Aitem%20%7C%20aBlock%20value%3A%20%28Issue%20new%20withData%3A%20item%3B%20setToken%3A%20token%29%5D%0A%09%09%09finally%3A%20aFinallyBlock.%0A%09%5E%20true.%20'),
+messageSends: ["ifFalse:", "log:", "fetchAllFromUrl:withEachDo:finally:", "apiUrlFor:", "value:", "withData:", "setToken:", "new"],
+referencedClasses: ["Issues", "Issue"]
+}),
+smalltalk.Issues);
+
 
 smalltalk.addMethod(
 unescape('_fetchIssuesFor_withEachDo_finally_'),
